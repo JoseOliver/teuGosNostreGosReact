@@ -1,0 +1,19 @@
+body {
+  margin:0;
+  padding:0;
+  width:100vw;
+  height:100vh;
+  background-color: white;
+}
+
+#root {
+  padding:0;
+}
+
+nav {
+  min-width: fit-content !important;
+}
+
+a.navbar-brand {
+  margin:0;
+}
