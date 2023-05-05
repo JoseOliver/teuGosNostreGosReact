@@ -1,0 +1,7 @@
+nav {
+    min-width: fit-content !important;
+}
+
+a.navbar-brand {
+    margin:0;
+}

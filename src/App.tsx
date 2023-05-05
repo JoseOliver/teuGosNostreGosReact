@@ -1,33 +1,20 @@
 import './App.css';
-import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
+import {
+  Routes,
+  Route
+} from "react-router-dom";
+import { Navig } from './common/navbar/Navbar';
+import Home from './views/home';
+import { Perfil } from './common/perfil/Perfil';
 
-function App() {
-
+function App(): JSX.Element {
   return (
     <>
-      <Navbar bg="light" expand="lg">
-        <Container>
-          <Navbar.Brand href="#home">El Teu gos<br></br>El Nostre gos</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link href="#home">Home</Nav.Link>
-              <Nav.Link href="#link">Link</Nav.Link>
-              <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">
-                  Another action
-                </NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">
-                  Separated link
-                </NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+      <Navig></Navig>
+      <Routes>
+        <Route element={<Home></Home>} path='/'></Route>
+        <Route element={<Perfil></Perfil>} path='/perfil'></Route>
+      </Routes>
     </>
   )
 }

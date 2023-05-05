@@ -10,10 +10,6 @@ body {
   padding:0;
 }
 
-nav {
-  min-width: fit-content !important;
-}
-
-a.navbar-brand {
-  margin:0;
+.clicable {
+  cursor: pointer;
 }
