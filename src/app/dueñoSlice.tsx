@@ -1,0 +1,37 @@
+import { createSlice } from '@reduxjs/toolkit'
+
+interface Usuario {
+  nombre?:string;
+  apellido?:string;
+  telefono?:string;
+  email?:string;
+  token?: string;  
+}
+
+let UsuarioVacio:Usuario = {
+  nombre:'',
+  apellido:'',
+  telefono:'',
+  email:'',
+  token: ''
+}
+
+export const dueñoSlice = createSlice({
+  name: 'dueño',
+  initialState: UsuarioVacio,
+  reducers: {
+    setDueño: (state, action) => {
+      return {
+        ...state,
+        ...action.payload
+      };
+    },
+    resetDueño: () => {
+      return {...UsuarioVacio};
+    }
+  }
+});
+
+export const { setDueño, resetDueño } = dueñoSlice.actions;
+export const selectMe = (state:any) => state;
+export default dueñoSlice.reducer

@@ -4,8 +4,8 @@ import {
   Route
 } from "react-router-dom";
 import { Navig } from './common/navbar/Navbar';
-import Home from './views/home';
-import { Perfil } from './common/perfil/Perfil';
+import { Home } from './views/home';
+import { Perfil } from './views/Perfil';
 
 function App(): JSX.Element {
   return (
