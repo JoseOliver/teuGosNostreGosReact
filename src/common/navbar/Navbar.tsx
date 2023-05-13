@@ -1,9 +1,13 @@
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux'
+import { selectMe, setDueño, resetDueño } from '../../app/dueñoSlice'
 import './Navbar.css'
 import { useNavigate } from 'react-router-dom';
 
 export const Navig = () => {
     const navigate = useNavigate();
+    const dueño:any = useSelector(selectMe);
+    const dispatch = useDispatch();
     return (
         <Navbar bg="light" expand="lg">
             <Container>
@@ -11,18 +15,16 @@ export const Navig = () => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
-                <Nav.Link onClick={()=>navigate('/perfil')}>Perfil</Nav.Link>
-                <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                    <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.2">
-                    Another action
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item href="#action/3.4">
-                    Separated link
-                    </NavDropdown.Item>
-                </NavDropdown>
+                {dueño.dueño.token === '' ? (
+                    <NavDropdown title="Autenticación" id="basic-nav-dropdown">
+                        <NavDropdown.Item onClick={()=>navigate('/auth/login')}>Login</NavDropdown.Item>
+                        <NavDropdown.Item onClick={()=>navigate('/auth/registro')}>Registro</NavDropdown.Item>
+                    </NavDropdown>
+
+                ):(
+                    <Nav.Link onClick={()=>navigate('/perfil')}>Perfil</Nav.Link>
+                        // {/* <NavDropdown.Divider /> */}
+                )}
                 </Nav>
             </Navbar.Collapse>
             </Container>
