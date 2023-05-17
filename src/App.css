@@ -5,6 +5,9 @@
     margin: 5px;
     padding: 5px;
 }
+.tabulado {
+    width: 100px;
+}
 .error {
     color:red;
 }
@@ -19,4 +22,18 @@ input:invalid {
 }
 input:valid {
     border-color: green;
+}
+.column {
+    display:flex;
+    flex-direction: column;
+}
+.grupo {
+    border:2px solid black;
+    border-radius: 5px;
+    background-color: aliceblue;
+}
+.grupo-edit {
+    border:2px solid black;
+    border-radius: 5px;
+    background-color: azure;
 }
