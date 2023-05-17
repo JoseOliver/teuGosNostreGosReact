@@ -14,9 +14,34 @@ export const login= async ( email:string , pass:string ) => {
         return error;
     }
 }
+export const register= async (nombre:string, apellido:string, telefono:string, email:string, pass:string) => {
+    try {
+        let body = {
+            props:{
+                nombre: nombre,
+                apellido: apellido,
+                telefono: telefono,
+                email: email,
+                contraseña: pass
+            }
+        }
+        let res:any = await axios.post(`${root}auth/register`, body)
+        return res;
+    } catch (error) {
+        return error;
+    }
+}
+export const getMe= async (token:string) => {
+    try {
+        let config = {
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        }
+        let res:any = await axios.get(`${root}usuario/yo`,config);
+        return res;
+    } catch (error) {
+        return error;
+    }
 
-// let config = {
-//     headers: {
-//         Authorization: 'Bearer ' + token
-//     }
-// }
+}

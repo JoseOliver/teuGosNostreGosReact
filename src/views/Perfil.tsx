@@ -12,7 +12,10 @@ export const Perfil = () => {
         <div>
             <h2>Perfil</h2>
             {dueño.dueño.token !== '' && (
-                <Button variant='danger' onClick={()=>dispatch(resetDueño())}>Logout</Button>
+                <Button variant='danger' onClick={()=>{
+                    dispatch(resetDueño());
+                    navigate('/');
+                }}>Logout</Button>
             )}
         </div>
     )
