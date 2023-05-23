@@ -1,12 +1,13 @@
-import { Component, useEffect, useRef, useState } from 'react';
+import { Component, useEffect, useRef, useState, Dispatch, SetStateAction } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, ToastContainer, Toast } from 'react-bootstrap';
 import { selectMe, setDueño, resetDueño } from '../app/dueñoSlice';
 import EditableInput from '../common/editableInput/EditableInput';
 import * as dayjs from 'dayjs';
+import { getMe, setMe } from '../services/apiCalls';
 
-export const Perfil = () => {
+export const Perfil = ( props:any ) => {
     const navigate = useNavigate();
     const dueño = useSelector(selectMe);
     const dispatch = useDispatch();
@@ -21,20 +22,26 @@ export const Perfil = () => {
     const [perfil, setPerfil] = useState({...dueño.dueño, pass:'***'});
     const [guardable, setGuardable]= useState(true);
     const emailRegex = "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,15})+$";
-
-    const [successMessage,setSuccessMessage] = useState('');
-    const [errMessage,setErrMessage] = useState('');
-    const [visibleSuccess,setVisibleSuccess] = useState(false);
-    const [visibleErr,setVisibleErr] = useState(false);
     let now = dayjs();
 
     useEffect(()=>{
-        if( errMessage !== '')setVisibleErr(true);
-    },[errMessage]);
+        if(props.savePerfilProps.savePerfil){
+            if(guardable)save();
+            else {
+                props.messageProps.setErrMessage('Alguno de los datos no era valido y finalmente se ha descartado');
+            cancel();
+        }
+        }
+    },[props.savePerfilProps.guardarPerfil])
+
     useEffect(()=>{
-        if( successMessage !== '')setVisibleSuccess(true);
-    },[successMessage]);
-    // useEffect(()=>{console.log(nombreInput)},[]);
+        getMe(dueño.dueño.token)
+        .then((res)=>{
+            if(res.status===200)return;
+            if(res.response.status===500)logout('expirado');
+        });
+    },[]);
+    
     const _setPerfil = (nombre:string,elem:string) => {
         setPerfil({...perfil, [nombre]:elem});
     }
@@ -43,16 +50,39 @@ export const Perfil = () => {
         setGrupoClass('grupo-edit');
         passInput.current.placeholder='mantener contraseña';
         setEditPerfil(true);
+        props.savePerfilProps.setEditarPerfil(true);
     }
     const cancel = () => {
         setGrupoClass('grupo');
         setPerfil({
             ...perfilInicial
         });
+        setEditPerfil(false);
+        props.savePerfilProps.setEditarPerfil(false);
     }
     const save = () => {
+        setMe(perfil).
+        then((res:any)=>{
+            if (res.status === 200) {
+                props.messageProps.setSuccessMessage('Usuario actualizado correctamente');
+                dispatch(setDueño(perfil));
+            }
+            else console.log(res) // falta tratarlo
+        });
+        _setPerfil('pass','***');
         setGrupoClass('grupo');
-        setSuccessMessage('Datos guardados correctamente');
+        props.savePerfilProps.setGuardarPerfil(false);
+        props.savePerfilProps.setEditarPerfil(false);
+        setEditPerfil(false);
+        props.messageProps.setSuccessMessage('Datos guardados correctamente');
+    }
+    const logout = (status:string) => {
+        dispatch(resetDueño());
+        if(status === 'expirado') props.messageProps.setErrMessage('Sesión expirada, debe hacer login de nuevo');
+        if(status === 'correcto') props.messageProps.setSuccessMessage('Sesión cerrada correctamente');
+        setTimeout(() => {
+            navigate('/');
+        }, 2000);
     }
     useEffect(()=>{
         if(
@@ -64,7 +94,7 @@ export const Perfil = () => {
         else setGuardable(false);
     },[perfil])
     return (
-        <div>
+        <div className='espaciado'>
             <h2>Perfil</h2>
             {dueño.dueño.token !== '' && (
                 <div className='espaciado'>
@@ -76,11 +106,9 @@ export const Perfil = () => {
                         <div>
                             <Button className='espaciado' variant='success' disabled={!guardable} onClick={()=>{
                                 save();
-                                setEditPerfil(false);
                             }}>Guardar</Button>
                             <Button className='espaciado' variant='danger' onClick={()=>{
                                 cancel();
-                                setEditPerfil(false);
                             }}>Cancelar</Button>
                         </div>
                     )}
@@ -92,37 +120,10 @@ export const Perfil = () => {
                         <EditableInput label='Contraseña' nombre='pass' editFlag={editPerfil} value={perfil.pass} set={_setPerfil} ref={passInput}/>
                     </div>
                     <div>
-                        <Button className='espaciado' variant='danger' onClick={()=>{
-                            dispatch(resetDueño());
-                            navigate('/');
-                        }}>Logout</Button>
+                        <Button className='espaciado' variant='danger' onClick={()=>logout('correcto')}>Logout</Button>
                     </div>
                 </div>
                 )}
-        <ToastContainer position='bottom-center'>
-            <Toast onClose={() => {
-                setVisibleErr(false);
-                setErrMessage('');
-                }} show={visibleErr} delay={3000} autohide>
-                <Toast.Header>
-                    <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
-                    <strong className="me-auto">El teu Gos, el Nostre Gos</strong>
-                    <small>{now.format('hh:mm a')}</small>
-                </Toast.Header>
-                <Toast.Body className='error'>Error: {errMessage}</Toast.Body>
-            </Toast>
-            <Toast onClose={() => {
-                setVisibleSuccess(false);
-                setSuccessMessage('');
-                }} show={visibleSuccess} delay={3000} autohide>
-                <Toast.Header>
-                    <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
-                    <strong className="me-auto">El teu Gos, el Nostre Gos</strong>
-                    <small>{now.format('hh:mm a')}</small>
-                </Toast.Header>
-                <Toast.Body>Exito: {successMessage}</Toast.Body>
-            </Toast>
-        </ToastContainer>
         </div>
     )
 }

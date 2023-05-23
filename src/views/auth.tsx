@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, Dispatch, SetStateAction } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectMe, setDueño, resetDueño } from '../app/dueñoSlice'
 import { Button, Nav, Toast, ToastContainer, Spinner } from 'react-bootstrap';
@@ -6,17 +6,24 @@ import * as dayjs from 'dayjs'
 import { getMe, login, register } from '../services/apiCalls';
 import { useNavigate } from 'react-router-dom';
 
-type Auth ={
+interface Auth {
     page:string
 }
-const Auth = (auth:Auth) => {
+interface Message {
+    // successMessage:string,
+    // errMessage:string,
+    setSuccessMessage:Dispatch<SetStateAction<string>>
+    setErrMessage:Dispatch<SetStateAction<string>>
+}
+const Auth = (props:any) => {
     //#region common hooks and variables fold
     //LOGIN
     const navigate = useNavigate();
     const dueño = useSelector(selectMe);
     const dispatch = useDispatch();
+    const [page, setPage] = useState(props.page);
     //login or registro selector '1' or '2'
-    const [visibleDiv, setVisibleDiv] = useState();
+    const [visibleDiv, setVisibleDiv] = useState('');
     //login values
     const [email, setEmail] = useState('');
     const [pass, setPass] = useState('');
@@ -24,17 +31,11 @@ const Auth = (auth:Auth) => {
     const passInput:any = useRef();
     //submit switch
     const [canSubmit, setCanSubmit] = useState(false);
-    //success message
-    const [visibleSuccess, setVisibleSuccess] = useState(false);
-    const [successMessage, setSuccessMessage] = useState('');
     //error button spinner
     const [Reg_errBtnSpinner, setReg_ErrBtnSpinner] = useState(false);
     //error
     const [emailError, setEmailError] = useState('');
     const [passError, setPassError] = useState('');
-    //error message
-    const [visibleErr, setVisibleErr] = useState(false);
-    const [errMessage, setErrMessage] = useState('');
     //regex
     const emailRegex = "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,15})+$";
     //dayjs
@@ -63,19 +64,17 @@ const Auth = (auth:Auth) => {
     
     //COMMON
     const select = (me:any) => {
+        setPage(me);
         setVisibleDiv(me);
         if(me === '1')
         navigate('/auth/login');
         else 
         navigate('/auth/registro');
     }
-    useEffect(()=>{select(auth.page)},[auth]);
     useEffect(()=>{
-        if( errMessage !== '')setVisibleErr(true);
-    },[errMessage]);
-    useEffect(()=>{
-        if( successMessage !== '')setVisibleSuccess(true);
-    },[successMessage]);
+        if(props.page !== page) select(props.page);
+        else setVisibleDiv(props.page);
+    },[props.page]);
     //FUNCTIONS
     const handleFocus =(me:any)=>{
         switch(me.target.name){
@@ -124,10 +123,10 @@ const Auth = (auth:Auth) => {
         setErrBtnSpinner(true);
         login(email,pass)
         .then((res)=>{
-            if (res.code === 'ERR_NETWORK')setErrMessage('Fallo de conexión al servidor');
-            if (res.code === 'ERR_BAD_REQUEST')setErrMessage('Permiso denegado, comprueba los datos introducidos');
+            if (res.code === 'ERR_NETWORK')props.messageProps.setErrMessage('Fallo de conexión al servidor');
+            if (res.code === 'ERR_BAD_REQUEST')props.messageProps.setErrMessage('Permiso denegado, comprueba los datos introducidos');
             if (res.status === 200){
-                setSuccessMessage('Login realizado correctamente');
+                props.messageProps.setSuccessMessage('Login realizado correctamente');
                 let token= res.data;
                 dispatch(setDueño({
                     token: token
@@ -138,7 +137,7 @@ const Auth = (auth:Auth) => {
                         ...res.data.data
                     }))
                 })
-                .catch((error)=>{setErrMessage(error)});
+                .catch((error)=>{props.messageProps.setErrMessage(error)});
             }
             setErrBtnSpinner(false);
         });
@@ -277,15 +276,15 @@ const Auth = (auth:Auth) => {
         setErrBtnSpinner(true);
         register(Reg_nombre,Reg_apellido,Reg_telefono,Reg_email,Reg_pass)
         .then((res)=>{
-            if (res.code === 'ERR_NETWORK')setErrMessage('Fallo de conexión al servidor');
-            if (res.code === 'ERR_BAD_REQUEST')setErrMessage('Permiso denegado, comprueba los datos introducidos');
+            if (res.code === 'ERR_NETWORK')props.messageProps.setErrMessage('Fallo de conexión al servidor');
+            if (res.code === 'ERR_BAD_REQUEST')props.messageProps.setErrMessage('Permiso denegado, comprueba los datos introducidos');
             if (res.code === 'ERR_BAD_RESPONSE'){
                 if( res.response.data.success=== false ){
-                    setErrMessage(res.response.data.message);
+                    props.messageProps.setErrMessage(res.response.data.message);
                 }
             }
             if (res.status == 200){
-                setSuccessMessage('Registro realizado correctamente');
+                props.messageProps.setSuccessMessage('Registro realizado correctamente');
                 resetRegistro();
                 navigate('/auth/login');
             }
@@ -334,74 +333,55 @@ const Auth = (auth:Auth) => {
                 </div>
             )}
             { visibleDiv === '1' && dueño.dueño.token !=='' && (
-                <div>Bienvenido de nuevo {dueño.dueño.nombre}</div>
+                <>
+                    <div>Bienvenido de nuevo {dueño.dueño.nombre}</div>
+                    <Button variant='primary' onClick={()=>navigate('/perfil/usuario')}>Ir al perfil</Button>
+                </>
             )}
             { visibleDiv === '2' && (
-                <div className='register espaciado'>
-                    <h4>Registro</h4>
-                    <label htmlFor="nombre">Nombre</label>
-                    <div>
-                        <input name='nombre' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_nombreInput} required value={Reg_nombre} onChange={Reg_handleChange}/>
-                        <span className='error'>{Reg_nombreError}</span>
+                <>
+                    <div className='register espaciado'>
+                        <h4>Registro</h4>
+                        <label htmlFor="nombre">Nombre</label>
+                        <div>
+                            <input name='nombre' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_nombreInput} required value={Reg_nombre} onChange={Reg_handleChange}/>
+                            <span className='error'>{Reg_nombreError}</span>
+                        </div>
+                        <label htmlFor="apellido">Apellido</label>
+                        <div>
+                            <input name='apellido' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_apellidoInput} required value={Reg_apellido} onChange={Reg_handleChange}/>
+                            <span className='error'>{Reg_apellidoError}</span>
+                        </div>
+                        <label htmlFor="telefono">Telefono</label>
+                        <div>
+                            <input name='telefono' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_telefonoInput} required value={Reg_telefono} onChange={Reg_handleChange}/>
+                            <span className='error'>{Reg_telefonoError}</span>
+                        </div>
+                        <label htmlFor="email">Email</label>
+                        <div>
+                            <input name='email' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_emailInput} required pattern={emailRegex} value={Reg_email} onChange={Reg_handleChange}/>
+                            <span className='error'>{Reg_emailError}</span>
+                        </div>
+                        <label htmlFor="pass">Contraseña</label>
+                        <div>
+                            <input name='pass' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_passInput} required type='password' value={Reg_pass} onChange={Reg_handleChange}/>
+                            <span className='error'>{Reg_passError}</span>
+                        </div>
+                        <Button type='submit' disabled={!Reg_canSubmit} className='espaciado' variant='primary' onClick={Reg_submit}>
+                            {Reg_errBtnSpinner? (
+                                <Spinner
+                                as="span"
+                                animation="border"
+                                size="sm"
+                                role="status"
+                                aria-hidden="true"
+                                />
+                                ):(<span>Register</span>)
+                            }
+                        </Button>
                     </div>
-                    <label htmlFor="apellido">Apellido</label>
-                    <div>
-                        <input name='apellido' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_apellidoInput} required value={Reg_apellido} onChange={Reg_handleChange}/>
-                        <span className='error'>{Reg_apellidoError}</span>
-                    </div>
-                    <label htmlFor="telefono">Telefono</label>
-                    <div>
-                        <input name='telefono' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_telefonoInput} required value={Reg_telefono} onChange={Reg_handleChange}/>
-                        <span className='error'>{Reg_telefonoError}</span>
-                    </div>
-                    <label htmlFor="email">Email</label>
-                    <div>
-                        <input name='email' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_emailInput} required pattern={emailRegex} value={Reg_email} onChange={Reg_handleChange}/>
-                        <span className='error'>{Reg_emailError}</span>
-                    </div>
-                    <label htmlFor="pass">Contraseña</label>
-                    <div>
-                        <input name='pass' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_passInput} required type='password' value={Reg_pass} onChange={Reg_handleChange}/>
-                        <span className='error'>{Reg_passError}</span>
-                    </div>
-                    <Button type='submit' disabled={!Reg_canSubmit} className='espaciado' variant='primary' onClick={Reg_submit}>
-                        {Reg_errBtnSpinner? (
-                            <Spinner
-                            as="span"
-                            animation="border"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
-                            />
-                            ):(<span>Register</span>)
-                        }
-                    </Button>
-                </div>
+                </>
             )}
-        <ToastContainer position='bottom-center'>
-        <Toast onClose={() => {
-            setVisibleErr(false);
-            setErrMessage('');
-            }} show={visibleErr} delay={3000} autohide>
-            <Toast.Header>
-                <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
-                <strong className="me-auto">El teu Gos, el Nostre Gos</strong>
-                <small>{now.format('hh:mm a')}</small>
-            </Toast.Header>
-            <Toast.Body className='error'>Error: {errMessage}</Toast.Body>
-        </Toast>
-        <Toast onClose={() => {
-            setVisibleSuccess(false);
-            setSuccessMessage('');
-            }} show={visibleSuccess} delay={3000} autohide>
-            <Toast.Header>
-                <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
-                <strong className="me-auto">El teu Gos, el Nostre Gos</strong>
-                <small>{now.format('hh:mm a')}</small>
-            </Toast.Header>
-            <Toast.Body>Exito: {successMessage}</Toast.Body>
-        </Toast>
-        </ToastContainer>
         </div>
     )
 }

@@ -2,6 +2,16 @@ import axios from 'axios';
 import { decodeToken } from 'react-jwt';
 const root='http://localhost:3000/';
 
+type Usuario = {
+    changes:{
+        nombre:string,
+        apellido:string,
+        telefono:string,
+        email:string,
+        contraseña?:string
+
+    }
+}
 export const login= async ( email:string , pass:string ) => {
     try {
         let body = {
@@ -43,5 +53,27 @@ export const getMe= async (token:string) => {
     } catch (error) {
         return error;
     }
-
+}
+export const setMe= async (props:any) => {
+    try {
+        let config = {
+            headers: {
+                Authorization: 'Bearer ' + props.token
+            }
+        };
+        let body:Usuario = {
+            changes:{
+                nombre: props.nombre,
+                apellido: props.apellido,
+                telefono: props.telefono,
+                email: props.email
+            }
+        };
+        if(props.pass !== '')body.changes.contraseña= props.pass;
+        // if(props.pass === '***')console.log("ahora ha sido cuanddo habia que borrar");
+        let res:any = await axios.post(`${root}usuario/yo`,body,config);
+        return res;
+    } catch (error) {
+        return error;
+    }
 }

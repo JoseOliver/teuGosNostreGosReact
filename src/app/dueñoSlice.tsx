@@ -5,7 +5,8 @@ export interface Usuario {
   apellido?:string;
   telefono?:string;
   email?:string;
-  token?: string;  
+  token?: string;
+  edit?:boolean;
 }
 
 let UsuarioVacio:Usuario = {
