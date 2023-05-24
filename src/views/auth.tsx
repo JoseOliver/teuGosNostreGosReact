@@ -6,15 +6,6 @@ import * as dayjs from 'dayjs'
 import { getMe, login, register } from '../services/apiCalls';
 import { useNavigate } from 'react-router-dom';
 
-interface Auth {
-    page:string
-}
-interface Message {
-    // successMessage:string,
-    // errMessage:string,
-    setSuccessMessage:Dispatch<SetStateAction<string>>
-    setErrMessage:Dispatch<SetStateAction<string>>
-}
 const Auth = (props:any) => {
     //#region common hooks and variables fold
     //LOGIN
@@ -135,7 +126,8 @@ const Auth = (props:any) => {
                 .then((res:any)=>{
                     dispatch(setDueño({
                         ...res.data.data
-                    }))
+                    }));
+                    setTimeout(()=>navigate('/'),2000);
                 })
                 .catch((error)=>{props.messageProps.setErrMessage(error)});
             }
@@ -305,7 +297,7 @@ const Auth = (props:any) => {
                     <Nav.Link eventKey="2">Registro</Nav.Link>
                 </Nav.Item>
             </Nav>
-            { visibleDiv === '1' && dueño.dueño.token === '' && (
+            { visibleDiv === '1' && dueño.token === '' && (
                 <div className="login espaciado">
                     <h4>Login</h4>
                     <label htmlFor="email">Email</label>
@@ -332,10 +324,9 @@ const Auth = (props:any) => {
                     </Button>
                 </div>
             )}
-            { visibleDiv === '1' && dueño.dueño.token !=='' && (
+            { visibleDiv === '1' && dueño.token !=='' && (
                 <>
-                    <div>Bienvenido de nuevo {dueño.dueño.nombre}</div>
-                    <Button variant='primary' onClick={()=>navigate('/perfil/usuario')}>Ir al perfil</Button>
+                    <div>Bienvenido de nuevo {dueño.nombre}</div>
                 </>
             )}
             { visibleDiv === '2' && (

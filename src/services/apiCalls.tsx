@@ -77,3 +77,16 @@ export const setMe= async (props:any) => {
         return error;
     }
 }
+export const getMyPerros = async (props:any) => {
+    try {
+        let config = {
+            headers: {
+                Authorization: 'Bearer ' + props.token
+            }
+        };
+        let res:any = await axios.get(`${root}dueño/perros`,config);
+        return res;
+    } catch (error) {
+        return error;
+    }
+}

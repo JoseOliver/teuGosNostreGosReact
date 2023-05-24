@@ -18,8 +18,8 @@ export const Perfil = ( props:any ) => {
     const telefonoInput:any=useRef();
     const emailInput:any=useRef();
     const passInput:any=useRef();
-    const [perfilInicial, setPerfilInicial] = useState({...dueño.dueño, pass:'***'});
-    const [perfil, setPerfil] = useState({...dueño.dueño, pass:'***'});
+    const [perfilInicial, setPerfilInicial] = useState({...dueño, pass:'***'});
+    const [perfil, setPerfil] = useState({...dueño, pass:'***'});
     const [guardable, setGuardable]= useState(true);
     const emailRegex = "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,15})+$";
     let now = dayjs();
@@ -35,7 +35,7 @@ export const Perfil = ( props:any ) => {
     },[props.savePerfilProps.guardarPerfil])
 
     useEffect(()=>{
-        getMe(dueño.dueño.token)
+        getMe(dueño.token)
         .then((res)=>{
             if(res.status===200)return;
             if(res.response.status===500)logout('expirado');
@@ -57,8 +57,10 @@ export const Perfil = ( props:any ) => {
         setPerfil({
             ...perfilInicial
         });
+        _setPerfil('pass','***');
         setEditPerfil(false);
         props.savePerfilProps.setEditarPerfil(false);
+        
     }
     const save = () => {
         setMe(perfil).
@@ -96,7 +98,7 @@ export const Perfil = ( props:any ) => {
     return (
         <div className='espaciado'>
             <h2>Perfil</h2>
-            {dueño.dueño.token !== '' && (
+            {dueño.token !== '' && (
                 <div className='espaciado'>
                     {!editPerfil?(
                         <div>
@@ -117,7 +119,7 @@ export const Perfil = ( props:any ) => {
                         <EditableInput label='Apellido' nombre='apellido' editFlag={editPerfil} value={perfil.apellido} set={_setPerfil} ref={apellidoInput} required/>
                         <EditableInput label='Teléfono' nombre='telefono' editFlag={editPerfil} value={perfil.telefono} set={_setPerfil} ref={telefonoInput} required/>
                         <EditableInput label='Email' nombre='email' editFlag={editPerfil} value={perfil.email} ref={emailInput} set={_setPerfil} pattern={emailRegex} required/>
-                        <EditableInput label='Contraseña' nombre='pass' editFlag={editPerfil} value={perfil.pass} set={_setPerfil} ref={passInput}/>
+                        <EditableInput visibleFlag type='password' label='Contraseña' nombre='pass' editFlag={editPerfil} value={perfil.pass} set={_setPerfil} ref={passInput}/>
                     </div>
                     <div>
                         <Button className='espaciado' variant='danger' onClick={()=>logout('correcto')}>Logout</Button>

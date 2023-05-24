@@ -4,6 +4,7 @@ import { Button, Spinner } from 'react-bootstrap';
 const Dueño = () => {
   const [perrosClass, setPerrosClass]= useState('grupo');
   const [estanciasClass, setEstanciasClass]= useState('grupo');
+  
   return (
     <>
       <div className='espaciado'>

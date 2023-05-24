@@ -26,7 +26,7 @@ export const Navig = (props:any) => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                    {dueño.dueño.token === '' ? (
+                    {dueño.token === '' ? (
                         <NavDropdown title="Autenticación" id="basic-nav-dropdown">
                             <NavDropdown.Item onClick={()=>navigateFunc('/auth/login')}>Login</NavDropdown.Item>
                             <NavDropdown.Item onClick={()=>navigateFunc('/auth/registro')}>Registro</NavDropdown.Item>

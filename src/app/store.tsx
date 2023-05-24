@@ -4,9 +4,11 @@ import storage from 'redux-persist/lib/storage';
 import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import thunk from 'redux-thunk';
+import perroSlice from './perroSlice';
 
 const reducers = combineReducers({
-    dueño: dueñoSlice
+    dueño: dueñoSlice,
+    perros: perroSlice
 })
 
 const persistConfig = {

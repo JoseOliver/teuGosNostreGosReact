@@ -39,7 +39,7 @@ function App(): JSX.Element {
     }, 2000);
   }
   useEffect(()=>{
-    getMe(dueño.dueño.token)
+    getMe(dueño.token)
     .then((res)=>{
         if(res.status===200)return;
         if(res.response.status===500)logout('expirado');
@@ -59,11 +59,7 @@ function App(): JSX.Element {
         <Route element={<Home></Home>} path='/'></Route>
         <Route element={<Auth page='1' messageProps={messageProps}></Auth>} path='/auth/login'></Route>
         <Route element={<Auth page='2' messageProps={messageProps}></Auth>} path='/auth/registro'></Route>
-        <Route element={<Perfil 
-          messageProps={messageProps}
-          savePerfilProps= {savePerfilProps}
-          >
-          </Perfil>} path='/perfil/usuario'></Route>
+        <Route element={<Perfil messageProps={messageProps} savePerfilProps= {savePerfilProps}></Perfil>} path='/perfil/usuario'></Route>
         <Route element={<Dueño></Dueño>} path='/perfil/dueño'></Route>
       </Routes>
       <ToastContainer position='bottom-center'>

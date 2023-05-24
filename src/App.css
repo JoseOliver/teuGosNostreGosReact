@@ -5,6 +5,13 @@
     margin: 5px;
     padding: 5px;
 }
+.plano {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.flex {
+    display:flex;
+}
 .tabulado {
     width: 100px;
 }
