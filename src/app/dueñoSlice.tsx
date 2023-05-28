@@ -33,5 +33,4 @@ export const dueñoSlice = createSlice({
 
 export const { setDueño, resetDueño } = dueñoSlice.actions;
 export const selectMe = (state:any) => state.dueño;
-export const selectMyPerros = (state:any) => state.perros;
 export default dueñoSlice.reducer

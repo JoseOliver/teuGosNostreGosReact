@@ -10,13 +10,21 @@ export const Navig = (props:any) => {
     const dueño:any = useSelector(selectMe);
     const dispatch = useDispatch();
     const [showModal, setShowModal] = useState(false);
+    const [showPerroModal, setShowPerroModal] = useState(false);
     const [url, setUrl] = useState('');
     const navigateFunc = (url:string) => {
-        if (!props.savePerfilProps.EditarPerfil) navigate(url);
-        else {
+        let _navigate= true;
+        if (props.savePerfilProps.editarPerfil){
             setUrl(url);
             setShowModal(true);
-        }
+            _navigate=false;
+        } 
+        if (props.savePerroProps.editarPerro){
+            setUrl(url);
+            setShowPerroModal(true);
+            _navigate=false;
+        } 
+        if(_navigate)navigate(url);
     }
     return (
         <>
@@ -62,6 +70,28 @@ export const Navig = (props:any) => {
                         <Button variant="primary" onClick={()=>{
                             props.savePerfilProps.setEditarPerfil(false);
                             setShowModal(false);
+                            navigate(url);
+                        }}>
+                            Cancelar cambios y navegar
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+                <Modal show={showPerroModal} onHide={()=>setShowPerroModal(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Guardar cambios efectuados</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Tienes cambios editados sin guardar</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={()=>{
+                            props.savePerroProps.setGuardarPerro(true);
+                            setShowPerroModal(false);
+                            setTimeout(()=>{navigate(url)},2000);
+                            }}>
+                            Guardar cambios
+                        </Button>
+                        <Button variant="primary" onClick={()=>{
+                            props.savePerroProps.setEditarPerro(false);
+                            setShowPerroModal(false);
                             navigate(url);
                         }}>
                             Cancelar cambios y navegar

@@ -15,10 +15,13 @@ import { selectMe, resetDueño } from './app/dueñoSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { Toast, ToastContainer } from 'react-bootstrap';
 import * as dayjs from 'dayjs';
+import Perro from './common/perro/Perro';
 
 function App(): JSX.Element {
   const [editarPerfil,setEditarPerfil]= useState<boolean>(false);
   const [guardarPerfil,setGuardarPerfil]= useState<boolean>(false);
+  const [editarPerro,setEditarPerro]= useState<boolean>(false);
+  const [guardarPerro,setGuardarPerro]= useState<boolean>(false);
   const dueño = useSelector(selectMe);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -28,6 +31,7 @@ function App(): JSX.Element {
   const [visibleSuccess,setVisibleSuccess] = useState(false);
   const [visibleErr,setVisibleErr] = useState(false);
   const savePerfilProps = {editarPerfil, setEditarPerfil, guardarPerfil, setGuardarPerfil};
+  const savePerroProps ={editarPerro, setEditarPerro, guardarPerro, setGuardarPerro};
   let now = dayjs();
 
   const logout = (status:string) => {
@@ -54,18 +58,19 @@ function App(): JSX.Element {
 
   return (
     <>
-      <Navig savePerfilProps={savePerfilProps}></Navig>
+      <Navig savePerfilProps={savePerfilProps} savePerroProps={savePerroProps}></Navig>
       <Routes>
         <Route element={<Home></Home>} path='/'></Route>
         <Route element={<Auth page='1' messageProps={messageProps}></Auth>} path='/auth/login'></Route>
         <Route element={<Auth page='2' messageProps={messageProps}></Auth>} path='/auth/registro'></Route>
         <Route element={<Perfil messageProps={messageProps} savePerfilProps= {savePerfilProps}></Perfil>} path='/perfil/usuario'></Route>
         <Route element={<Dueño></Dueño>} path='/perfil/dueño'></Route>
+        <Route element={<Perro messageProps={messageProps} savePerroProps={savePerroProps} ></Perro>} path='/perfil/dueño/perro'></Route>
       </Routes>
       <ToastContainer position='bottom-center'>
             <Toast onClose={() => {
                 setVisibleErr(false);
-                setErrMessage('');
+                setTimeout(()=>setErrMessage(''),500);
                 }} show={visibleErr} delay={3000} autohide>
                 <Toast.Header>
                     <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
@@ -76,7 +81,7 @@ function App(): JSX.Element {
             </Toast>
             <Toast onClose={() => {
                 setVisibleSuccess(false);
-                setSuccessMessage('');
+                setTimeout(()=>setSuccessMessage(''),500);
                 }} show={visibleSuccess} delay={3000} autohide>
                 <Toast.Header>
                     <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />

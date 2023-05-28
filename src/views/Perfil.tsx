@@ -25,42 +25,31 @@ export const Perfil = ( props:any ) => {
     let now = dayjs();
 
     useEffect(()=>{
-        if(props.savePerfilProps.savePerfil){
+        if(props.savePerfilProps.guardarPerfil){
             if(guardable)save();
             else {
                 props.messageProps.setErrMessage('Alguno de los datos no era valido y finalmente se ha descartado');
-            cancel();
-        }
+                cancel();
+            }
         }
     },[props.savePerfilProps.guardarPerfil])
-
-    useEffect(()=>{
-        getMe(dueño.token)
-        .then((res)=>{
-            if(res.status===200)return;
-            if(res.response.status===500)logout('expirado');
-        });
-    },[]);
     
     const _setPerfil = (nombre:string,elem:string) => {
         setPerfil({...perfil, [nombre]:elem});
     }
-    const edit = () => {
+    const edit =() => {
         _setPerfil('pass','');
         setGrupoClass('grupo-edit');
         passInput.current.placeholder='mantener contraseña';
         setEditPerfil(true);
         props.savePerfilProps.setEditarPerfil(true);
     }
-    const cancel = () => {
+    const cancel =() => {
         setGrupoClass('grupo');
-        setPerfil({
-            ...perfilInicial
-        });
-        _setPerfil('pass','***');
+        setPerfil({...perfilInicial});
+        passInput.current.placeholder='';
         setEditPerfil(false);
         props.savePerfilProps.setEditarPerfil(false);
-        
     }
     const save = () => {
         setMe(perfil).
@@ -84,9 +73,10 @@ export const Perfil = ( props:any ) => {
         if(status === 'correcto') props.messageProps.setSuccessMessage('Sesión cerrada correctamente');
         setTimeout(() => {
             navigate('/');
-        }, 2000);
+        }, 1000);
     }
     useEffect(()=>{
+        // console.log(dueño)
         if(
             perfil.nombre!=='' &&
             perfil.apellido!=='' &&
@@ -96,36 +86,34 @@ export const Perfil = ( props:any ) => {
         else setGuardable(false);
     },[perfil])
     return (
-        <div className='espaciado'>
-            <h2>Perfil</h2>
-            {dueño.token !== '' && (
-                <div className='espaciado'>
-                    {!editPerfil?(
-                        <div>
-                            <Button className='espaciado' variant='primary' onClick={()=>edit()}>Editar</Button>
+        <>
+            <div>
+                <h2>Perfil</h2>
+                {dueño.token !== '' && (
+                    <div className='espaciado'>
+                        {!editPerfil?(
+                            <div>
+                                <Button className='espaciado' variant='primary' onClick={()=>{edit();}}>Editar</Button>
+                            </div>
+                        ):(
+                            <div>
+                                <Button className='espaciado' variant='success' disabled={!guardable} onClick={()=>{save();}}>Guardar</Button>
+                                <Button className='espaciado' variant='danger' onClick={()=>{cancel();}}>Cancelar</Button>
+                            </div>
+                        )}
+                        <div className={grupoClass}>
+                            <EditableInput label='Nombre' nombre='nombre' editFlag={editPerfil} value={perfil.nombre} set={_setPerfil} ref={nombreInput} required/>
+                            <EditableInput label='Apellido' nombre='apellido' editFlag={editPerfil} value={perfil.apellido} set={_setPerfil} ref={apellidoInput} required/>
+                            <EditableInput label='Teléfono' nombre='telefono' editFlag={editPerfil} value={perfil.telefono} set={_setPerfil} ref={telefonoInput} required/>
+                            <EditableInput label='Email' nombre='email' editFlag={editPerfil} value={perfil.email} ref={emailInput} set={_setPerfil} pattern={emailRegex} required/>
+                            <EditableInput visibleFlag type='password' label='Contraseña' nombre='pass' editFlag={editPerfil} value={perfil.pass} set={_setPerfil} ref={passInput}/>
                         </div>
-                    ):(
                         <div>
-                            <Button className='espaciado' variant='success' disabled={!guardable} onClick={()=>{
-                                save();
-                            }}>Guardar</Button>
-                            <Button className='espaciado' variant='danger' onClick={()=>{
-                                cancel();
-                            }}>Cancelar</Button>
+                            <Button className='espaciado' variant='danger' onClick={()=>logout('correcto')}>Logout</Button>
                         </div>
-                    )}
-                    <div className={grupoClass}>
-                        <EditableInput label='Nombre' nombre='nombre' editFlag={editPerfil} value={perfil.nombre} set={_setPerfil} ref={nombreInput} required/>
-                        <EditableInput label='Apellido' nombre='apellido' editFlag={editPerfil} value={perfil.apellido} set={_setPerfil} ref={apellidoInput} required/>
-                        <EditableInput label='Teléfono' nombre='telefono' editFlag={editPerfil} value={perfil.telefono} set={_setPerfil} ref={telefonoInput} required/>
-                        <EditableInput label='Email' nombre='email' editFlag={editPerfil} value={perfil.email} ref={emailInput} set={_setPerfil} pattern={emailRegex} required/>
-                        <EditableInput visibleFlag type='password' label='Contraseña' nombre='pass' editFlag={editPerfil} value={perfil.pass} set={_setPerfil} ref={passInput}/>
                     </div>
-                    <div>
-                        <Button className='espaciado' variant='danger' onClick={()=>logout('correcto')}>Logout</Button>
-                    </div>
-                </div>
                 )}
-        </div>
+            </div>
+        </>
     )
 }

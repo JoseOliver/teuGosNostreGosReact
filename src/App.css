@@ -12,8 +12,22 @@
 .flex {
     display:flex;
 }
+.centrado {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.repartido {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+}
 .tabulado {
     width: 100px;
+}
+.redondeado {
+    border-radius: 7px;
 }
 .exito {
     color:green;
@@ -22,7 +36,7 @@
     color:red;
 }
 .login {
-
+flex-direction: column;
 }
 .register {
     
@@ -37,6 +51,9 @@ input:valid {
     display:flex;
     flex-direction: column;
 }
+.label {
+    font-weight:bold;
+}
 .grupo {
     border:2px solid black;
     border-radius: 5px;
@@ -48,4 +65,18 @@ input:valid {
     border-radius: 5px;
     background-color: azure;
     min-width:192px;
+}
+.grupo-perro {
+    display:flex;
+    border:2px solid black;
+    border-radius: 5px;
+    background-color: aliceblue;
+    min-width:192px;
+    flex-wrap: wrap;
+}
+.perro-preview {
+    border:2px solid black;
+    border-radius: 5px;
+    background-color: burlywood;
+    max-width: 200px;
 }

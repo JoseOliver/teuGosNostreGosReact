@@ -14,21 +14,21 @@ let perroVacio:Perro = {
 }
 export const perroSlice = createSlice({
     name: 'perros',
-    initialState: {perros:[], selected:perroVacio},
+    initialState: {perros:[perroVacio], selected:-1},
     reducers: {
         setPerros: (state:any, action) => {
             return {
                 ...state,
                 ...action.payload
             }
+        },
+        resetPerros: () => {
+        return {perros:[perroVacio], selected:-1};
         }
-        // resetPerros: () => {
-        // return {...UsuarioVacio};
-        // }
     }
 });
 
-export const { setPerros } = perroSlice.actions;
+export const { setPerros, resetPerros } = perroSlice.actions;
 export const selectMyPerros = (state:any) => state.perros;
 export const selectSelectedPerro = (state:any) => state.perros.selected;
 export default perroSlice.reducer

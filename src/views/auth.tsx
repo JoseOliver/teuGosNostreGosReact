@@ -298,17 +298,21 @@ const Auth = (props:any) => {
                 </Nav.Item>
             </Nav>
             { visibleDiv === '1' && dueño.token === '' && (
-                <div className="login espaciado">
+                <div className="espaciado">
                     <h4>Login</h4>
-                    <label htmlFor="email">Email</label>
-                    <div>
-                        <input name='email' onKeyUp={handleEnter} onFocus={handleFocus} onBlur={handleBlur} ref={emailInput} required pattern={emailRegex} value={email} onChange={handleChange}/>
-                        <span className='error'>{emailError}</span>
+                    <div className='login flex'>
+                        <label htmlFor="email" className='tabulado'>Email</label>
+                        <div>
+                            <input name='email' className='espaciado redondeado' onKeyUp={handleEnter} onFocus={handleFocus} onBlur={handleBlur} ref={emailInput} required pattern={emailRegex} value={email} onChange={handleChange}/>
+                            <span className='error'>{emailError}</span>
+                        </div>
                     </div>
-                    <label htmlFor="pass">Contraseña</label>
                     <div>
-                        <input name='pass' onKeyUp={handleEnter} onFocus={handleFocus} onBlur={handleBlur} ref={passInput} required type='password' value={pass} onChange={handleChange}/>
-                        <span className='error'>{passError}</span>
+                        <label htmlFor="pass" className='tabulado'>Contraseña</label>
+                        <div>
+                            <input name='pass' className='espaciado redondeado' onKeyUp={handleEnter} onFocus={handleFocus} onBlur={handleBlur} ref={passInput} required type='password' value={pass} onChange={handleChange}/>
+                            <span className='error'>{passError}</span>
+                        </div>
                     </div>
                     <Button type='submit' disabled={!canSubmit} className='espaciado' variant='primary' onClick={submit}>
                         {errBtnSpinner? (
@@ -335,27 +339,27 @@ const Auth = (props:any) => {
                         <h4>Registro</h4>
                         <label htmlFor="nombre">Nombre</label>
                         <div>
-                            <input name='nombre' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_nombreInput} required value={Reg_nombre} onChange={Reg_handleChange}/>
+                            <input name='nombre' className='espaciado redondeado' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_nombreInput} required value={Reg_nombre} onChange={Reg_handleChange}/>
                             <span className='error'>{Reg_nombreError}</span>
                         </div>
                         <label htmlFor="apellido">Apellido</label>
                         <div>
-                            <input name='apellido' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_apellidoInput} required value={Reg_apellido} onChange={Reg_handleChange}/>
+                            <input name='apellido' className='espaciado redondeado' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_apellidoInput} required value={Reg_apellido} onChange={Reg_handleChange}/>
                             <span className='error'>{Reg_apellidoError}</span>
                         </div>
                         <label htmlFor="telefono">Telefono</label>
                         <div>
-                            <input name='telefono' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_telefonoInput} required value={Reg_telefono} onChange={Reg_handleChange}/>
+                            <input name='telefono' className='espaciado redondeado' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_telefonoInput} required value={Reg_telefono} onChange={Reg_handleChange}/>
                             <span className='error'>{Reg_telefonoError}</span>
                         </div>
                         <label htmlFor="email">Email</label>
                         <div>
-                            <input name='email' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_emailInput} required pattern={emailRegex} value={Reg_email} onChange={Reg_handleChange}/>
+                            <input name='email' className='espaciado redondeado' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_emailInput} required pattern={emailRegex} value={Reg_email} onChange={Reg_handleChange}/>
                             <span className='error'>{Reg_emailError}</span>
                         </div>
                         <label htmlFor="pass">Contraseña</label>
                         <div>
-                            <input name='pass' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_passInput} required type='password' value={Reg_pass} onChange={Reg_handleChange}/>
+                            <input name='pass' className='espaciado redondeado' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_passInput} required type='password' value={Reg_pass} onChange={Reg_handleChange}/>
                             <span className='error'>{Reg_passError}</span>
                         </div>
                         <Button type='submit' disabled={!Reg_canSubmit} className='espaciado' variant='primary' onClick={Reg_submit}>

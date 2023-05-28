@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from "react-redux"
 import { selectMe, resetDueño } from "../app/dueñoSlice";
-import { selectMyPerros, selectSelectedPerro, setPerros } from "../app/perroSlice"
+import { resetPerros, selectMyPerros, selectSelectedPerro, setPerros } from "../app/perroSlice"
 import { Button } from "react-bootstrap";
 
 export const Home = () => {
@@ -18,7 +18,7 @@ export const Home = () => {
             <Button onClick={()=>{console.log(dueño)}}>mostrar Dueño</Button>
             <Button onClick={()=>{console.log(perros)}}>mostrar Perros</Button>
             <Button onClick={()=>{console.log(perros.perros[selectedperro -1])}}>mostrar Perro</Button>
-            <Button onClick={()=>{dispatch(setPerros({perros:[{nombre:'perro1'}]}))}}>set Perros</Button>
+            <Button onClick={()=>{dispatch(resetPerros())}}>reset Perros</Button>
             <Button onClick={()=>{dispatch(setPerros({selected:1}))}}>set Perro</Button>
         </>
     )
