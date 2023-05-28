@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Toast, ToastContainer } from 'react-bootstrap';
 import * as dayjs from 'dayjs';
 import Perro from './common/perro/Perro';
+import NewPerro from './common/perro/NewPerro';
 
 function App(): JSX.Element {
   const [editarPerfil,setEditarPerfil]= useState<boolean>(false);
@@ -32,11 +33,15 @@ function App(): JSX.Element {
   const [visibleErr,setVisibleErr] = useState(false);
   const savePerfilProps = {editarPerfil, setEditarPerfil, guardarPerfil, setGuardarPerfil};
   const savePerroProps ={editarPerro, setEditarPerro, guardarPerro, setGuardarPerro};
+  const [logoutShow, setLogoutShow] = useState(false);
   let now = dayjs();
 
   const logout = (status:string) => {
     dispatch(resetDueño());
-    if(status === 'expirado') setErrMessage('Sesión expirada, debe hacer login de nuevo');
+    if(status === 'expirado' && logoutShow) {
+      setLogoutShow(false);
+      setErrMessage('Sesión expirada, debe hacer login de nuevo');
+    }
     if(status === 'correcto') setSuccessMessage('Sesión cerrada correctamente');
     setTimeout(() => {
         navigate('/');
@@ -45,7 +50,10 @@ function App(): JSX.Element {
   useEffect(()=>{
     getMe(dueño.token)
     .then((res)=>{
-        if(res.status===200)return;
+        if(res.status===200){
+          setLogoutShow(true);
+          return;
+        }
         if(res.response.status===500)logout('expirado');
     });
   },[]);
@@ -66,6 +74,7 @@ function App(): JSX.Element {
         <Route element={<Perfil messageProps={messageProps} savePerfilProps= {savePerfilProps}></Perfil>} path='/perfil/usuario'></Route>
         <Route element={<Dueño></Dueño>} path='/perfil/dueño'></Route>
         <Route element={<Perro messageProps={messageProps} savePerroProps={savePerroProps} ></Perro>} path='/perfil/dueño/perro'></Route>
+        <Route element={<NewPerro></NewPerro>} path='/perfil/dueño/nuevo-perro'></Route>
       </Routes>
       <ToastContainer position='bottom-center'>
             <Toast onClose={() => {

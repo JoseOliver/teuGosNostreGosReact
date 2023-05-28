@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import EditableInput from '../editableInput/EditableInput'
-import { selectMyPerros } from '../../app/perroSlice'
+import { selectMyPerros, setPerros } from '../../app/perroSlice'
+import { setMyPerro } from '../../services/apiCalls'
+import { selectMe } from '../../app/dueñoSlice'
 
 const Perro = (props:any) => {
+  const dueño= useSelector(selectMe);
   const perros= useSelector(selectMyPerros);
+  const dispatch= useDispatch();
   const navigate= useNavigate();
   const [editFlag, setEditFlag] = useState(false);
   const numInput:any=useRef();
@@ -16,6 +20,13 @@ const Perro = (props:any) => {
   const [perfilPerro, setPerfilPerro] = useState(perros.perros[perros.selected -1]);
   const [perfilPerroInicial, setPerfilPerroInicial] = useState(perros.perros[perros.selected -1]);
   const [guardable, setGuardable] = useState(true);
+  useEffect(()=>{
+    if(
+        perfilPerro.nombre!=='' &&
+        perfilPerro.fecha_nacimiento!==''
+    ) setGuardable(true);
+    else setGuardable(false);
+},[perfilPerro])
 
   const _setPerfilPerro = (nombre:string,elem:string) => {
     setPerfilPerro({...perfilPerro, [nombre]:elem});
@@ -25,11 +36,26 @@ const Perro = (props:any) => {
     props.savePerroProps.setEditarPerro(true);
   };
   const save = () => {
+    setMyPerro(dueño.token,perfilPerro.num, {
+      nombre: perfilPerro.nombre,
+      fecha_nacimiento:perfilPerro.fecha_nacimiento,
+      anotaciones:perfilPerro.anotaciones
+    })
+    .then((res:any)=>{
+      if (res.status === 200) {
+        props.messageProps.setSuccessMessage('Perro actualizado correctamente');
+        let _perros= [...perros.perros];
+        _perros[(perfilPerro.num -1)]=perfilPerro;
+        dispatch(setPerros({perros:_perros}));
+    }
+    else console.log(res) // falta tratarlo
+    });
     setEditFlag(false);
     props.savePerroProps.setGuardarPerro(false);
     props.savePerroProps.setEditarPerro(false);
   };
   const cancel = () => {
+    props.savePerroProps.setEditarPerro(false);
     setPerfilPerro({...perfilPerroInicial})
     setEditFlag(false);
   };
@@ -53,7 +79,7 @@ const Perro = (props:any) => {
         </>
       ):(
         <>
-        <Button variant='success' className='espaciado' onClick={()=>{save()}}>Guardar</Button>
+        <Button variant='success' className='espaciado' disabled={!guardable} onClick={()=>{save()}}>Guardar</Button>
         <Button variant='danger' className='espaciado' onClick={()=>{cancel()}}>Cancelar</Button>
         </>
       )}

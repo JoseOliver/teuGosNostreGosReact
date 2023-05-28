@@ -36,7 +36,7 @@ const EditableInput = forwardRef((props:EditableInput, ref:any) => {
                 props.set(props.nombre,elem.target.value);
                 }} pattern={props.pattern}/>
             {props.visibleFlag && props.visibleFlag === true && props.editFlag && <Button variant='light' onClick={setVisible}><Icon path={mdiEyeCircleOutline} size={1} /></Button>}
-            {props.editFlag && ref.current && !ref.current.validity.valid && props.nombre!=='pass' && props.value==='' && <span className='error centrado'>El {props.nombre} no puede ser vacio</span>}
+            {props.editFlag && ref.current && !ref.current.validity.valid && props.nombre!=='pass' && props.value==='' && <span className='error centrado'>El campo {props.nombre} no puede ser vacio</span>}
         </div>
     )});
 

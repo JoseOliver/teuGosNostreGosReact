@@ -34,7 +34,7 @@ const Dueño = () => {
         <h2>Panel de dueño</h2>
         <div className='espaciado'>
           <h3>Mis Perros</h3>
-          <Button className='espaciado'>Nuevo Perro</Button>
+          <Button className='espaciado' onClick={()=>navigate('/perfil/dueño/nuevo-perro')}>Nuevo Perro</Button>
           {perros.perros.length===1 && perros.perros[0].num===-1?(
             <>
               <div id='perros' className={perrosClass}>Perros...

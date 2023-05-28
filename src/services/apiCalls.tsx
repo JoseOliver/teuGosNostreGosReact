@@ -90,3 +90,20 @@ export const getMyPerros = async (token:string) => {
         return error;
     }
 }
+export const setMyPerro = async (token:string, id:number, changes:Object) => {
+    try {
+        let config = {
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        };
+        let body= {
+            id:id,
+            changes:changes
+        }
+        let res:any= await axios.put(`${root}dueno/perro`, body, config);
+        return res;
+    } catch (error) {
+        return error;
+    }
+}
