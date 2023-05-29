@@ -107,3 +107,19 @@ export const setMyPerro = async (token:string, id:number, changes:Object) => {
         return error;
     }
 }
+export const newPerro = async (token:string, props:Object) => {
+    try {
+        let config = {
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        };
+        let body = {
+            props: props
+        };
+        let res:any= await axios.post(`${root}dueno/perro`, body, config);
+        return res;
+    } catch (error) {
+        return error;
+    }
+}

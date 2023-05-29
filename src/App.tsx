@@ -74,7 +74,7 @@ function App(): JSX.Element {
         <Route element={<Perfil messageProps={messageProps} savePerfilProps= {savePerfilProps}></Perfil>} path='/perfil/usuario'></Route>
         <Route element={<Dueño></Dueño>} path='/perfil/dueño'></Route>
         <Route element={<Perro messageProps={messageProps} savePerroProps={savePerroProps} ></Perro>} path='/perfil/dueño/perro'></Route>
-        <Route element={<NewPerro></NewPerro>} path='/perfil/dueño/nuevo-perro'></Route>
+        <Route element={<NewPerro messageProps={messageProps}></NewPerro>} path='/perfil/dueño/nuevo-perro'></Route>
       </Routes>
       <ToastContainer position='bottom-center'>
             <Toast onClose={() => {
