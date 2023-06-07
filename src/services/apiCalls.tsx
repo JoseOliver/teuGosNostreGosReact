@@ -123,3 +123,16 @@ export const newPerro = async (token:string, props:Object) => {
         return error;
     }
 }
+export const getMyEstancias = async (token:string) => {
+    try {
+        let config = {
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        };
+        let res:any = await axios.get(`${root}dueno/estancias`,config);
+        return res;
+    } catch (error) {
+        return error;
+    }
+}

@@ -6,6 +6,7 @@ import EditableInput from '../editableInput/EditableInput'
 import { selectMyPerros, setPerros } from '../../app/perroSlice'
 import { setMyPerro } from '../../services/apiCalls'
 import { selectMe } from '../../app/dueñoSlice'
+import './Perro.css'
 
 const Perro = (props:any) => {
   const dueño= useSelector(selectMe);
@@ -72,7 +73,13 @@ const Perro = (props:any) => {
 
   return (
     <div className='espaciado'>
-      <Button variant='primary' className='espaciado' onClick={()=>navigate('/perfil/dueño')}>Atras</Button>
+      <Button variant='primary' className='espaciado' onClick={()=>{
+        navigate('/perfil/dueño');
+        if(props.savePerroProps.editarPerro){
+          props.savePerroProps.setEditarPerro(false);
+          props.messageProps.setErrMessage('No se ha realizado ninguna gestión');
+        }
+        }}>Atras</Button>
       { !editFlag? (
         <>
           <Button variant='primary' className='espaciado' onClick={()=>{edit()}}>Editar</Button>
@@ -99,7 +106,26 @@ const Perro = (props:any) => {
             <label htmlFor="nombre" className='label tabulado'>Anotaciones: </label>
             <span>{perros.perros[perros.selected -1].anotaciones}</span>
           </div>
-          <Button variant='primary' className='espaciado'>Ver sus Estancias</Button>
+          <h3>Estancias</h3>
+          <Button variant='primary' className='espaciado'>Nueva estancia</Button>
+          <div className='espaciado grupo repartido'>
+          { perros.perros[perros.selected -1].estancias !== undefined ? (
+              perros.perros[perros.selected -1].estancias.map((elem:any) =>{
+                return (
+                  <>
+                  <div key={'estancia'+ perros.perros[perros.selected -1].estancias.id} className='estancia espaciado'>
+                    <label htmlFor="id" className='label tabulado'>Id estancia: </label><span>{elem.id}</span><br />
+                    <label htmlFor="inicio" className='label tabulado'>Fecha inicio: </label><span>{elem.inicio}</span><br />
+                    <label htmlFor="fin" className='label tabulado'>Fecha fin: </label><span>{elem.fin}</span><br />
+                  </div>
+                  </>
+                )
+              })
+            ):(
+              <span>Sin estancias</span>
+            )
+          }
+          </div>
         </>
 ):(
   <>

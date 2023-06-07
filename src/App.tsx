@@ -33,13 +33,11 @@ function App(): JSX.Element {
   const [visibleErr,setVisibleErr] = useState(false);
   const savePerfilProps = {editarPerfil, setEditarPerfil, guardarPerfil, setGuardarPerfil};
   const savePerroProps ={editarPerro, setEditarPerro, guardarPerro, setGuardarPerro};
-  const [logoutShow, setLogoutShow] = useState(false);
   let now = dayjs();
 
   const logout = (status:string) => {
     dispatch(resetDueño());
-    if(status === 'expirado' && logoutShow) {
-      setLogoutShow(false);
+    if(status === 'expirado') {
       setErrMessage('Sesión expirada, debe hacer login de nuevo');
     }
     if(status === 'correcto') setSuccessMessage('Sesión cerrada correctamente');
@@ -51,10 +49,9 @@ function App(): JSX.Element {
     getMe(dueño.token)
     .then((res)=>{
         if(res.status===200){
-          setLogoutShow(true);
           return;
         }
-        if(res.response.status===500)logout('expirado');
+        else logout('expirado');
     });
   },[]);
   useEffect(()=>{
@@ -72,7 +69,7 @@ function App(): JSX.Element {
         <Route element={<Auth page='1' messageProps={messageProps}></Auth>} path='/auth/login'></Route>
         <Route element={<Auth page='2' messageProps={messageProps}></Auth>} path='/auth/registro'></Route>
         <Route element={<Perfil messageProps={messageProps} savePerfilProps= {savePerfilProps}></Perfil>} path='/perfil/usuario'></Route>
-        <Route element={<Dueño></Dueño>} path='/perfil/dueño'></Route>
+        <Route element={<Dueño messageProps={messageProps}></Dueño>} path='/perfil/dueño'></Route>
         <Route element={<Perro messageProps={messageProps} savePerroProps={savePerroProps} ></Perro>} path='/perfil/dueño/perro'></Route>
         <Route element={<NewPerro messageProps={messageProps}></NewPerro>} path='/perfil/dueño/nuevo-perro'></Route>
       </Routes>

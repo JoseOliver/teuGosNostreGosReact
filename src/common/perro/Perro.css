@@ -1,0 +1,29 @@
+.grupo-perro {
+    display:flex;
+    border:2px solid black;
+    border-radius: 5px;
+    background-color: aliceblue;
+    min-width:192px;
+    flex-wrap: wrap;
+}
+.grupo-estancia {
+    display:flex;
+    justify-content: space-around;
+    border:2px solid black;
+    border-radius: 5px;
+    background-color: aliceblue;
+    min-width:192px;
+    flex-wrap: wrap;
+}
+.perro-preview {
+    border:2px solid black;
+    border-radius: 5px;
+    background-color: burlywood;
+    max-width: 200px;
+}
+.estancia {
+    border:2px solid black;
+    border-radius: 5px;
+    background-color: burlywood;
+    max-width: 400px;
+}
