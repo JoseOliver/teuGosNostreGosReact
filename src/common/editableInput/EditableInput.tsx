@@ -2,6 +2,7 @@ import { useState, forwardRef, ForwardedRef, useRef, useEffect } from 'react'
 import { Button } from 'react-bootstrap'
 import Icon from '@mdi/react';
 import { mdiEyeCircleOutline } from '@mdi/js';
+import './EditableInput.css';
 
 type EditableInput ={
     nombre:string,
@@ -30,7 +31,7 @@ const EditableInput = forwardRef((props:EditableInput, ref:any) => {
         }
     }
     return (
-        <div className='flex espaciado'>
+        <div className='flex espaciado edit-input'>
             <label className='espaciado tabulado' htmlFor="input">{props.label}</label>
             <input className='redondeado' ref={ref} type={props.type} placeholder={props.placeholder} required={props.required} maxLength={20} readOnly={!props.editFlag} value={props.value} onChange={(elem)=>{
                 props.set(props.nombre,elem.target.value);

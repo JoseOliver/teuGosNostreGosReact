@@ -1,0 +1,8 @@
+.edit-input {
+    height: 40px;
+    align-items: center;
+    min-width: 235px;
+}
+input {
+    min-width: 120px;
+}

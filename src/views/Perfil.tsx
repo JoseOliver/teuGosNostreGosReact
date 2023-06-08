@@ -102,12 +102,12 @@ export const Perfil = ( props:any ) => {
                                 <Button className='espaciado' variant='danger' onClick={()=>{cancel();}}>Cancelar</Button>
                             </div>
                         )}
-                        <div className={grupoClass}>
+                        <div className={'grupo-perfil '+grupoClass}>
                             <EditableInput label='Nombre' nombre='nombre' editFlag={editPerfil} value={perfil.nombre} set={_setPerfil} ref={nombreInput} required/>
                             <EditableInput label='Apellido' nombre='apellido' editFlag={editPerfil} value={perfil.apellido} set={_setPerfil} ref={apellidoInput} required/>
                             <EditableInput label='Teléfono' nombre='telefono' editFlag={editPerfil} value={perfil.telefono} set={_setPerfil} ref={telefonoInput} required/>
                             <EditableInput label='Email' nombre='email' editFlag={editPerfil} value={perfil.email} ref={emailInput} set={_setPerfil} pattern={emailRegex} required/>
-                            <EditableInput visibleFlag type='password' label='Contraseña' nombre='pass' editFlag={editPerfil} value={perfil.pass} set={_setPerfil} ref={passInput}/>
+                            <EditableInput visibleFlag type='password' label='Pass' nombre='pass' editFlag={editPerfil} value={perfil.pass} set={_setPerfil} ref={passInput}/>
                         </div>
                         <div>
                             <Button className='espaciado' variant='danger' onClick={()=>logout('correcto')}>Logout</Button>
