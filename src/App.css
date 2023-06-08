@@ -2,8 +2,9 @@
     cursor: pointer;
 }
 .espaciado {
-    margin: 5px;
     padding: 5px;
+    margin: 5px;
+    /* width: max-content; */
 }
 .plano {
     margin: 0 !important;

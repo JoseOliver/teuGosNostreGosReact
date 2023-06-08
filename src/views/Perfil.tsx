@@ -48,6 +48,7 @@ export const Perfil = ( props:any ) => {
         setGrupoClass('grupo');
         setPerfil({...perfilInicial});
         passInput.current.placeholder='';
+        passInput.current.type='password';
         setEditPerfil(false);
         props.savePerfilProps.setEditarPerfil(false);
     }

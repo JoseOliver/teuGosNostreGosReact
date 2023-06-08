@@ -28,7 +28,7 @@ export const Navig = (props:any) => {
     }
     return (
         <>
-            <Navbar bg="light" expand="lg">
+            <Navbar bg="light" expand="sm">
                 <Container>
                 <Navbar.Brand className='clicable' onClick={()=>navigateFunc('/')}>El Teu gos<br></br>El Nostre gos</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />

@@ -4,6 +4,7 @@ body {
   width:100vw;
   height:0;
   background-color: white;
+  overflow-x: hidden;
 }
 
 #root {
