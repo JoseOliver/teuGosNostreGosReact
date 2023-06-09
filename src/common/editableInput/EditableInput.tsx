@@ -19,6 +19,7 @@ type EditableInput ={
 }
 const EditableInput = forwardRef((props:EditableInput, ref:any) => {
     const [error,setError] = useState('');
+    const [firstEdit, setFirstEdit] = useState(true);
     useEffect(()=>{
         if(!props.editFlag){
             ref.current.classList.remove("invalid");
@@ -40,7 +41,8 @@ const EditableInput = forwardRef((props:EditableInput, ref:any) => {
         switch(ref.current.value){
             case '':
                 ref.current.classList.add("invalid");
-                setError('El campo ' + props.nombre + ' es invalido, debe introducir algún valor');
+                if(!firstEdit)setError('El campo ' + props.nombre + ' es invalido, debe introducir algún valor');
+                setFirstEdit(false);
                 break;
             default:
                 if( props.nombre==='email' && !ref.current.value.match(props.pattern) ){//is invalid email
@@ -61,6 +63,7 @@ const EditableInput = forwardRef((props:EditableInput, ref:any) => {
             <input className='redondeado' id={props.nombre} ref={ref} type={props.type} placeholder={props.placeholder} required={props.required} maxLength={20} readOnly={!props.editFlag} value={props.value} onChange={(elem)=>{
                 props.set(props.nombre,elem.target.value);
                 checkValidity();
+                setFirstEdit(false);
                 }}/>
             {props.visibleFlag && props.visibleFlag === true && props.editFlag && <Button variant='light' onClick={setVisible}><Icon path={mdiEyeCircleOutline} size={1} /></Button>}
             {error!=='' && props.nombre!=='pass' && <span className='error centrado'>{error}</span>}

@@ -24,7 +24,6 @@ const Dueño = (props:any) => {
       }
     })
     .catch((err)=>{console.log(err)});
-    // console.log(perros)
     getMyEstancias(dueño.token)
     .then((res)=>{
       if(res.status===200){
@@ -36,7 +35,6 @@ const Dueño = (props:any) => {
           }
           _perros.push(_perro);
         }
-        // console.log(_perros)
         dispatch(setPerros({perros:_perros}));
       }
     })
@@ -54,11 +52,6 @@ const Dueño = (props:any) => {
         <div className='espaciado'>
           <h3>Mis Perros</h3>
           <Button className='espaciado' onClick={()=>navigate('/perfil/dueño/nuevo-perro')}>Nuevo Perro</Button>
-          {
-            <>
-              {console.log(perros)}
-            </>
-          }
           {perros.perros.length===1 && perros.perros[0].num===-1?(
             <>
               <div id='perros' className={perrosClass}>Perros...
