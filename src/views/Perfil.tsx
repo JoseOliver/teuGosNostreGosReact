@@ -21,7 +21,7 @@ export const Perfil = ( props:any ) => {
     const [perfilInicial, setPerfilInicial] = useState({...dueño, pass:'***'});
     const [perfil, setPerfil] = useState({...dueño, pass:'***'});
     const [guardable, setGuardable]= useState(true);
-    const emailRegex = "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,15})+$";
+    const emailRegex = "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$";
     let now = dayjs();
 
     useEffect(()=>{
@@ -106,8 +106,8 @@ export const Perfil = ( props:any ) => {
                             <EditableInput label='Nombre' nombre='nombre' editFlag={editPerfil} value={perfil.nombre} set={_setPerfil} ref={nombreInput} required/>
                             <EditableInput label='Apellido' nombre='apellido' editFlag={editPerfil} value={perfil.apellido} set={_setPerfil} ref={apellidoInput} required/>
                             <EditableInput label='Teléfono' nombre='telefono' editFlag={editPerfil} value={perfil.telefono} set={_setPerfil} ref={telefonoInput} required/>
-                            <EditableInput label='Email' nombre='email' editFlag={editPerfil} value={perfil.email} ref={emailInput} set={_setPerfil} pattern={emailRegex} required/>
-                            <EditableInput visibleFlag type='password' label='Pass' nombre='pass' editFlag={editPerfil} value={perfil.pass} set={_setPerfil} ref={passInput}/>
+                            <EditableInput label='Email' nombre='email' type='email' editFlag={editPerfil} value={perfil.email} ref={emailInput} set={_setPerfil} pattern={emailRegex} required/>
+                            <EditableInput visibleFlag type='text' label='Pass' nombre='pass' editFlag={editPerfil} value={perfil.pass} set={_setPerfil} ref={passInput}/>
                         </div>
                         <div>
                             <Button className='espaciado' variant='danger' onClick={()=>logout('correcto')}>Logout</Button>

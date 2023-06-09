@@ -42,7 +42,7 @@ const NewPerro = (props:any) => {
             <div className='espaciado'>
             <Button onClick={()=>{
                 navigate('/perfil/dueño');
-                props.messageProps.setErrMessage('No se ha realizado ninguna gestión');
+                props.messageProps.setErrMessage('Edicion cancelada. No se ha realizado ninguna gestión');
                 }}>Atras</Button>
             <EditableInput required set={_setPerfilPerro} nombre='nombre' ref={nombreInput} editFlag={true} label='Nombre: ' value={perfilPerro.nombre}></EditableInput>
             <EditableInput type='date' required set={_setPerfilPerro} nombre='fecha_nacimiento' ref={nacimientoInput} editFlag={true} label='Nacimiento: ' value={perfilPerro.fecha_nacimiento}></EditableInput>

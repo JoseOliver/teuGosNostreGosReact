@@ -6,3 +6,6 @@
 input {
     min-width: 120px;
 }
+input.invalid {
+    border-color: yellow;
+}

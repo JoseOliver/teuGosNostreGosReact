@@ -77,7 +77,7 @@ const Perro = (props:any) => {
         navigate('/perfil/dueño');
         if(props.savePerroProps.editarPerro){
           props.savePerroProps.setEditarPerro(false);
-          props.messageProps.setErrMessage('No se ha realizado ninguna gestión');
+          props.messageProps.setErrMessage('Edicion cancelada. No se ha realizado ninguna gestión');
         }
         }}>Atras</Button>
       { !editFlag? (

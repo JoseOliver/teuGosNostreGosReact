@@ -15,24 +15,28 @@ const Dueño = (props:any) => {
   const navigate= useNavigate();
 
   useEffect(()=>{
+    let perrosTemp:any;
     getMyPerros(dueño.token)
     .then((res)=>{
       if(res.status===200){
-        dispatch(setPerros({perros:res.data.data}));
+        perrosTemp= res.data.data;
+        dispatch(setPerros({perros:res.data.data, selected:0}));
       }
     })
     .catch((err)=>{console.log(err)});
+    // console.log(perros)
     getMyEstancias(dueño.token)
     .then((res)=>{
       if(res.status===200){
         let _perros= [];
-        for(let perroIndex in perros.perros){
-          let _perro= {...perros.perros[parseInt(perroIndex)]};
+        for(let perroIndex in perrosTemp){
+          let _perro= {...perrosTemp[parseInt(perroIndex)]};
           if(res.data.data[parseInt(perroIndex)]){
             _perro.estancias= res.data.data[perroIndex];
           }
           _perros.push(_perro);
         }
+        // console.log(_perros)
         dispatch(setPerros({perros:_perros}));
       }
     })
@@ -50,6 +54,11 @@ const Dueño = (props:any) => {
         <div className='espaciado'>
           <h3>Mis Perros</h3>
           <Button className='espaciado' onClick={()=>navigate('/perfil/dueño/nuevo-perro')}>Nuevo Perro</Button>
+          {
+            <>
+              {console.log(perros)}
+            </>
+          }
           {perros.perros.length===1 && perros.perros[0].num===-1?(
             <>
               <div id='perros' className={perrosClass}>Perros...

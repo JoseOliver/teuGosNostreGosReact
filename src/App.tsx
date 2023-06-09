@@ -10,8 +10,8 @@ import { Perfil } from './views/Perfil';
 import Dueño from './views/dueño'
 import Auth from './views/auth';
 import { useEffect, useState } from 'react';
-import { getMe } from './services/apiCalls';
-import { selectMe, resetDueño } from './app/dueñoSlice';
+import { getMe, setMe } from './services/apiCalls';
+import { selectMe, setDueño, resetDueño } from './app/dueñoSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { Toast, ToastContainer } from 'react-bootstrap';
 import * as dayjs from 'dayjs';
@@ -40,20 +40,25 @@ function App(): JSX.Element {
     if(status === 'expirado') {
       setErrMessage('Sesión expirada, debe hacer login de nuevo');
     }
-    if(status === 'correcto') setSuccessMessage('Sesión cerrada correctamente');
-    setTimeout(() => {
-        navigate('/');
-    }, 2000);
+    if(status === 'correcto'){
+      setSuccessMessage('Sesión cerrada correctamente');
+      setTimeout(() => {
+          navigate('/');
+      }, 2000);
+    }
   }
   useEffect(()=>{
+    if(!dueño.token){
+      dispatch(resetDueño());
+      return;
+    }
     getMe(dueño.token)
-    .then((res)=>{
-        if(res.status===200){
-          return;
-        }
-        else logout('expirado');
+    .then((res:any)=>{
+      if(!(res.status===200))
+      logout('expirado');
     });
-  },[]);
+  },[dueño.token]);
+  
   useEffect(()=>{
     if( errMessage !== '')setVisibleErr(true);
   },[errMessage]);
@@ -83,7 +88,7 @@ function App(): JSX.Element {
                     <strong className="me-auto">El teu Gos, el Nostre Gos</strong>
                     <small>{now.format('hh:mm a')}</small>
                 </Toast.Header>
-                <Toast.Body className='error'>Error: {errMessage}</Toast.Body>
+                <Toast.Body className='error'>Aviso: {errMessage}</Toast.Body>
             </Toast>
             <Toast onClose={() => {
                 setVisibleSuccess(false);

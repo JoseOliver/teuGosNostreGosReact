@@ -28,7 +28,7 @@ const Auth = (props:any) => {
     const [emailError, setEmailError] = useState('');
     const [passError, setPassError] = useState('');
     //regex
-    const emailRegex = "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,15})+$";
+    const emailRegex = "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$";
     //dayjs
     let now = dayjs();
     //REGISTRO
@@ -159,7 +159,11 @@ const Auth = (props:any) => {
     const Reg_handleBlur =(me:any)=>{
         switch(me.target.name){
             case 'email':
-                if(Reg_email!=='' && !Reg_emailInput.current.validity.valid)setReg_EmailError('Debes introducir un email correcto');
+                if(Reg_email===''){
+                    setReg_EmailError('El email no puede estar vacio');
+                    break;
+                }
+                if(Reg_email!=='' && !Reg_emailInput.current.value.match(emailRegex))setReg_EmailError('Debes introducir un email correcto');
                 else setReg_EmailError('');
                 break;
             case 'pass':
@@ -303,7 +307,7 @@ const Auth = (props:any) => {
                     <div className='login flex'>
                         <label htmlFor="email" className='tabulado'>Email</label>
                         <div>
-                            <input name='email' className='espaciado redondeado' onKeyUp={handleEnter} onFocus={handleFocus} onBlur={handleBlur} ref={emailInput} required pattern={emailRegex} value={email} onChange={handleChange}/>
+                            <input name='email' className='espaciado redondeado' onKeyUp={handleEnter} onFocus={handleFocus} onBlur={handleBlur} ref={emailInput} required type='email' value={email} onChange={handleChange}/>
                             <span className='error'>{emailError}</span>
                         </div>
                     </div>
@@ -354,7 +358,7 @@ const Auth = (props:any) => {
                         </div>
                         <label htmlFor="email">Email</label>
                         <div>
-                            <input name='email' className='espaciado redondeado' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_emailInput} required pattern={emailRegex} value={Reg_email} onChange={Reg_handleChange}/>
+                            <input name='email' className='espaciado redondeado' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} type='email' ref={Reg_emailInput} required value={Reg_email} onChange={Reg_handleChange}/>
                             <span className='error'>{Reg_emailError}</span>
                         </div>
                         <label htmlFor="pass">Contraseña</label>
