@@ -9,22 +9,24 @@ import { getMe, setMe } from '../services/apiCalls';
 
 export const Perfil = ( props:any ) => {
     const navigate = useNavigate();
-    const dueño = useSelector(selectMe);
+    const dueño = useSelector(selectMe); // hook que contiene el perfil de usuario y las caracteristicas del rol dueño
     const dispatch = useDispatch();
-    const [editPerfil, setEditPerfil] = useState(false);
-    const [grupoClass, setGrupoClass]= useState('grupo');
+    const [editPerfil, setEditPerfil] = useState(false); // hook booleano para saber el estado de edicion del perfil
+    const [grupoClass, setGrupoClass]= useState('grupo'); // hook que determina la clase que envuelve al div del perfil, para poder aplicar los cambios visuales. Cambia entre 'grupo' por defecto y 'grupo-edit' cuando esta siendo editado
+    // - hooks de referencia de los inputs
     const nombreInput:any=useRef();
     const apellidoInput:any=useRef();
     const telefonoInput:any=useRef();
     const emailInput:any=useRef();
     const passInput:any=useRef();
-    const [perfilInicial, setPerfilInicial] = useState({...dueño, pass:'***'});
-    const [perfil, setPerfil] = useState({...dueño, pass:'***'});
-    const [guardable, setGuardable]= useState(true);
-    const emailRegex = "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$";
-    let now = dayjs();
+    // -
+    const [perfilInicial, setPerfilInicial] = useState({...dueño, pass:'***'}); // hook de estado de las variables del perfil. Este es un estado previo a realizar cambios, que se utiliza para reestablecer los cambios si es necesario
+    const [perfil, setPerfil] = useState({...dueño, pass:'***'}); // hook de estado de las variables del perfil. Este es el estado en directo con los cambios aplicados en front-end, que se utiliza para mantener los cambios hasta que sean guardados en la base de datos
+    const [guardable, setGuardable]= useState(true); // hook booleano que determina si las variables del perfil son optimas para que este pueda ser guardado en base de datos
+    const emailRegex = '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$'; // regex del campo email
+    let now = dayjs(); // fecha con valor de en este momento
 
-    useEffect(()=>{
+    useEffect(()=>{ // si guardarPerfil se pone en cualquier momento a 'true' esta funcion hace de trigger y permite guardar o descartar los datos
         if(props.savePerfilProps.guardarPerfil){
             if(guardable)save();
             else {
@@ -34,17 +36,17 @@ export const Perfil = ( props:any ) => {
         }
     },[props.savePerfilProps.guardarPerfil])
     
-    const _setPerfil = (nombre:string,elem:string) => {
+    const _setPerfil = (nombre:string,elem:string) => { // funcion para pasarla a los editableInput para que seteen la variable perfil correspondiente
         setPerfil({...perfil, [nombre]:elem});
     }
-    const edit =() => {
+    const edit =() => { // funcion que se ejecuta cuando el perfil esta en modo edicion
         _setPerfil('pass','');
         setGrupoClass('grupo-edit');
         passInput.current.placeholder='mantener contraseña';
         setEditPerfil(true);
         props.savePerfilProps.setEditarPerfil(true);
     }
-    const cancel =() => {
+    const cancel =() => { // funcion que se ejecuta para cancelar los cambios temporales hechos en perfil
         setGrupoClass('grupo');
         setPerfil({...perfilInicial});
         passInput.current.placeholder='';
@@ -52,7 +54,7 @@ export const Perfil = ( props:any ) => {
         setEditPerfil(false);
         props.savePerfilProps.setEditarPerfil(false);
     }
-    const save = () => {
+    const save = () => { // funcion que se ejecuta para guardar los cambios temporales hechos en perfil
         setMe(perfil).
         then((res:any)=>{
             if (res.status === 200) {
@@ -61,7 +63,7 @@ export const Perfil = ( props:any ) => {
             }
             else console.log(res) // falta tratarlo
         });
-        _setPerfil('pass','***');
+        _setPerfil('passss','***');
         setGrupoClass('grupo');
         props.savePerfilProps.setGuardarPerfil(false);
         props.savePerfilProps.setEditarPerfil(false);
@@ -76,8 +78,7 @@ export const Perfil = ( props:any ) => {
             navigate('/');
         }, 1000);
     }
-    useEffect(()=>{
-        // console.log(dueño)
+    useEffect(()=>{ // funcion que comprueba a cada cambio del perfil si este pasa las necesidades técnicas para cada campo
         if(
             perfil.nombre!=='' &&
             perfil.apellido!=='' &&
@@ -107,7 +108,7 @@ export const Perfil = ( props:any ) => {
                             <EditableInput label='Apellido' nombre='apellido' editFlag={editPerfil} value={perfil.apellido} set={_setPerfil} ref={apellidoInput} required/>
                             <EditableInput label='Teléfono' nombre='telefono' editFlag={editPerfil} value={perfil.telefono} set={_setPerfil} ref={telefonoInput} required/>
                             <EditableInput label='Email' nombre='email' type='email' editFlag={editPerfil} value={perfil.email} ref={emailInput} set={_setPerfil} pattern={emailRegex} required/>
-                            <EditableInput visibleFlag type='text' label='Pass' nombre='pass' editFlag={editPerfil} value={perfil.pass} set={_setPerfil} ref={passInput}/>
+                            <EditableInput visibleFlag type='password' label='Pass' nombre='pass' editFlag={editPerfil} value={perfil.pass} set={_setPerfil} ref={passInput}/>
                         </div>
                         <div>
                             <Button className='espaciado' variant='danger' onClick={()=>logout('correcto')}>Logout</Button>

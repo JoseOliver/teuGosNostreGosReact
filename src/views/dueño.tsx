@@ -5,6 +5,7 @@ import { selectMe } from '../app/dueñoSlice';
 import { getMyEstancias, getMyPerros } from '../services/apiCalls';
 import { selectMyPerros, setPerros } from '../app/perroSlice';
 import { useNavigate } from 'react-router-dom';
+import * as dayjs from 'dayjs';
 
 const Dueño = (props:any) => {
   const [perrosClass, setPerrosClass]= useState('grupo');
@@ -13,6 +14,7 @@ const Dueño = (props:any) => {
   const perros= useSelector(selectMyPerros);
   const dispatch= useDispatch();
   const navigate= useNavigate();
+  let now = dayjs();
 
   useEffect(()=>{
     let perrosTemp:any;
@@ -91,7 +93,7 @@ const Dueño = (props:any) => {
         </div>
         <div className='espaciado'>
           <h3>Sus estancias activas</h3>
-          <Button className='espaciado'>Nueva estancia</Button>
+          <Button className='espaciado' onClick={()=>{navigate('/perfil/dueño/nueva-estancia')}}>Nueva estancia</Button>
           { perros.perros.length===1 && perros.perros[0].num===-1?
             (
               <div id='estancias' className={estanciasClass}>Estancias...
@@ -114,13 +116,13 @@ const Dueño = (props:any) => {
                           {perro.estancias.map((estancia:any)=>{
                             return(
                                 <div key={'estancia'+estancia.id} className='estancia espaciado'>
-                                  <div key={'estanciaBis'+estancia.id}>
-                                    <label htmlFor="id" className='label tabulado'>Id estancia: </label><span>{estancia.id}</span><br />
-                                    <label htmlFor="inicio" className='label tabulado'>Fecha inicio: </label><span>{estancia.inicio}</span><br />
-                                    <label htmlFor="fin" className='label tabulado'>Fecha fin: </label><span>{estancia.fin}</span><br />
+                                  <div key={'estanciaBis'+estancia.id} onClick={()=>{navigate('/perfil/dueño/estancia')}}>
+                                    <label htmlFor="id" className='label tabulado'>Id estancia: </label><span key='id'>{estancia.id}</span><br />
+                                    <label htmlFor="inicio" className='label tabulado'>Fecha inicio: </label><span key='inicio'>{dayjs(estancia.inicio).format('DD-MM-YYYY hh:mm a')}</span><br />
+                                    <label htmlFor="fin" className='label tabulado'>Fecha fin: </label><span key='fin'>{dayjs(estancia.fin).format('DD-MM-YYYY hh:mm a')}</span><br />
                                   </div>
                                   <div key={'botoneraEstancia'+estancia.id} className='centrado'>
-                                    <Button variant='primary' className='espaciado' onClick={()=>{}}>Ver</Button>
+                                    <Button variant='primary' className='espaciado' onClick={()=>{navigate('/perfil/dueño/estancia')}}>Ver</Button>
                                     <Button variant='danger' className='espaciado' onClick={()=>{}}>Quitar</Button>
                                   </div>
                                 </div>

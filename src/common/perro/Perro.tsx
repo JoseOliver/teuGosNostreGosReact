@@ -107,7 +107,9 @@ const Perro = (props:any) => {
             <span>{perros.perros[perros.selected -1].anotaciones}</span>
           </div>
           <h3>Estancias</h3>
-          <Button variant='primary' className='espaciado'>Nueva estancia</Button>
+          <Button variant='primary' className='espaciado' onClick={()=>{
+            navigate('/perfil/dueño/nueva-estancia');
+          }}>Nueva estancia</Button>
           <div className='espaciado grupo repartido'>
           { perros.perros[perros.selected -1].estancias !== undefined ? (
               perros.perros[perros.selected -1].estancias.map((elem:any) =>{
@@ -117,6 +119,10 @@ const Perro = (props:any) => {
                     <label htmlFor="id" className='label tabulado'>Id estancia: </label><span>{elem.id}</span><br />
                     <label htmlFor="inicio" className='label tabulado'>Fecha inicio: </label><span>{elem.inicio}</span><br />
                     <label htmlFor="fin" className='label tabulado'>Fecha fin: </label><span>{elem.fin}</span><br />
+                    <div className='centrado'>
+                      <Button variant='primary' className='espaciado' onClick={()=>{}}>Ver</Button>
+                      <Button variant='danger' className='espaciado' onClick={()=>props.messageProps.setErrMessage('Para eliminar debes hablar con tu cuidador antes')}>Quitar</Button>
+                    </div>
                   </div>
                   </>
                 )

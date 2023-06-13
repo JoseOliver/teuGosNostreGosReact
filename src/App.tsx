@@ -17,6 +17,8 @@ import { Toast, ToastContainer } from 'react-bootstrap';
 import * as dayjs from 'dayjs';
 import Perro from './common/perro/Perro';
 import NewPerro from './common/perro/NewPerro';
+import Estancia from './common/estancia/Estancia';
+import NewEstancia from './common/estancia/NewEstancia';
 
 function App(): JSX.Element {
   const [editarPerfil,setEditarPerfil]= useState<boolean>(false);
@@ -57,7 +59,7 @@ function App(): JSX.Element {
       if(!(res.status===200))
       logout('expirado');
     });
-  },[dueño.token]);
+  },[dueño]);
   
   useEffect(()=>{
     if( errMessage !== '')setVisibleErr(true);
@@ -77,6 +79,8 @@ function App(): JSX.Element {
         <Route element={<Dueño messageProps={messageProps}></Dueño>} path='/perfil/dueño'></Route>
         <Route element={<Perro messageProps={messageProps} savePerroProps={savePerroProps} ></Perro>} path='/perfil/dueño/perro'></Route>
         <Route element={<NewPerro messageProps={messageProps}></NewPerro>} path='/perfil/dueño/nuevo-perro'></Route>
+        <Route element={<Estancia></Estancia>} path='/perfil/dueño/estancia'></Route>
+        <Route element={<NewEstancia messageProps={messageProps}></NewEstancia>} path='/perfil/dueño/nueva-estancia'></Route>
       </Routes>
       <ToastContainer position='bottom-center'>
             <Toast onClose={() => {
