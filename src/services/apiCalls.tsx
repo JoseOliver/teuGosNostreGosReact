@@ -136,3 +136,16 @@ export const getMyEstancias = async (token:string) => {
         return error;
     }
 }
+export const getCuidadores = async (token:string) => {
+    try {
+        let config = {
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        };
+        let res:any = await axios.get(`${root}dueno/cuidadores`,config);
+        return res;
+    } catch (error) {
+        return error;
+    }
+}

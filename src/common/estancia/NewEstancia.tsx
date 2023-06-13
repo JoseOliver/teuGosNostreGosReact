@@ -5,11 +5,16 @@ import { selectMe } from '../../app/dueñoSlice';
 import EditableInput from '../editableInput/EditableInput';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { getCuidadores } from '../../services/apiCalls';
+import './Estancia.css';
 
 const NewEstancia = (props:any) => {
     const navigate = useNavigate();
     const me= useSelector(selectMe);
     const perros= useSelector(selectMyPerros);
+    const [cuidadores, setCuidadores]= useState([{
+        id:'-1'
+    }]);
     const inicioInput:any = useRef();
     const finInput:any = useRef();
     const [perfilEstancia, setPerfilEstancia] = useState({
@@ -23,13 +28,24 @@ const NewEstancia = (props:any) => {
         setPerfilEstancia({...perfilEstancia, [nombre]:value});
     };
     useEffect(()=>{
+        getCuidadores(me.token)
+        .then((res:any) => {
+            setCuidadores(res.data.data);
+        })
+        .catch((error:any) => {
+            props.messageProps.setErrMessage(error.message);
+        });
+        if(perros.selected) _setEstancia('numPerro',perros.perros[perros.selected -1].num);
+    },[])
+    useEffect(()=>{
         if(
-            perfilEstancia.numPerro === '' || perfilEstancia.numPerro == '-1' ||
+            perfilEstancia.numPerro === '' ||
             perfilEstancia.inicio === '' ||
             perfilEstancia.fin === '' ||
             perfilEstancia.cuidadorId === ''
         ) setGuardable(false);
         else setGuardable(true);
+        // console.log(perfilEstancia)
     },[perfilEstancia]);
 
     const save = () => {
@@ -43,24 +59,42 @@ const NewEstancia = (props:any) => {
                 }}>Atras</Button>
             <div className='espaciado column'>
                 <div className='columna'>
-                    <div className='flex espaciado edit-input'>
+                    <div className='columna espaciado-lateral'>
                         <label className='label espaciado tabulado' htmlFor="perro">Perro: </label>
                         <select className='redondeado' name="perro" id="perro" defaultValue={
                             perros.perros[perros.selected -1] ? 
                             (
-                                perros.perros[perros.selected -1].num
+                                perros.perros[perros.selected -1].nombre
                             ):(
                                 -1
                             ) 
                         } onChange={(elem:any)=>{
                             let perroSeleccionado:string = elem.target.value;
-                            for (let perro of perros.perros){
+                            if(perroSeleccionado=== '-1')
+                                _setEstancia('numPerro','');
+                            else for (let perro of perros.perros){
                                 if (perro.nombre.match(perroSeleccionado)) _setEstancia('numPerro',perro.num);
                             }
                         }}>
                             <option value='-1'>Elige...</option>
                             {perros.perros.map((perro:any)=>{ return(
-                                <option key={perro.num} value={perro.num}>{perro.nombre}</option>
+                                <option key={perro.num} value={perro.nombre}>{perro.nombre}</option>
+                                )})}
+                        </select>
+                    </div>
+                    <div className='columna espaciado-lateral'>
+                        <label className='label espaciado tabulado' htmlFor="cuidador">Cuidador: </label>
+                        <select className='redondeado' name="cuidador" id="cuidador" defaultValue='-1' onChange={(elem:any)=>{
+                            let cuidadorSeleccionado:string = elem.target.value;
+                            if(cuidadorSeleccionado === '-1')
+                                _setEstancia('cuidadorId','');
+                            else for (let cuidador of cuidadores){
+                                if (cuidador.id.toString().match(cuidadorSeleccionado)) _setEstancia('cuidadorId',cuidador.id);
+                            }
+                        }}>
+                            <option value='-1'>Elige...</option>
+                            {cuidadores.map((cuidador:any)=>{ return(
+                                <option key={cuidador.id} value={cuidador.id}>{cuidador.nombre} {cuidador.apellido}</option>
                                 )})}
                         </select>
                     </div>
