@@ -59,7 +59,7 @@ function App(): JSX.Element {
       if(!(res.status===200))
       logout('expirado');
     });
-  },[dueño]);
+  },[dueño.token]);
   
   useEffect(()=>{
     if( errMessage !== '')setVisibleErr(true);
