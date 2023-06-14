@@ -63,7 +63,7 @@ export const Perfil = ( props:any ) => {
             }
             else console.log(res) // falta tratarlo
         });
-        _setPerfil('passss','***');
+        _setPerfil('pass','***');
         setGrupoClass('grupo');
         props.savePerfilProps.setGuardarPerfil(false);
         props.savePerfilProps.setEditarPerfil(false);
@@ -87,6 +87,12 @@ export const Perfil = ( props:any ) => {
         ) setGuardable(true);
         else setGuardable(false);
     },[perfil])
+    useEffect(()=>{
+        getMe(dueño.token)
+        .then((res:any)=>{
+            if(!(res.status === 200)) logout('expirado');
+        });
+    },[]);
     return (
         <>
             <div>

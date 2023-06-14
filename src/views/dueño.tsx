@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import { Button, Spinner } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectMe } from '../app/dueñoSlice';
-import { getMyEstancias, getMyPerros } from '../services/apiCalls';
+import { resetDueño, selectMe } from '../app/dueñoSlice';
+import { getMe, getMyEstancias, getMyPerros } from '../services/apiCalls';
 import { selectMyPerros, setPerros } from '../app/perroSlice';
 import { useNavigate } from 'react-router-dom';
 import * as dayjs from 'dayjs';
@@ -43,6 +43,20 @@ const Dueño = (props:any) => {
     .catch((error)=>{console.log(error)});
   },[]);
 
+  useEffect(()=>{
+    getMe(dueño.token)
+    .then((res:any)=>{
+        if(!(res.status === 200)) logout('expirado');
+    });
+},[]);
+  const logout = (status:string) => {
+    dispatch(resetDueño());
+    if(status === 'expirado') props.messageProps.setErrMessage('Sesión expirada, debe hacer login de nuevo');
+    if(status === 'correcto') props.messageProps.setSuccessMessage('Sesión cerrada correctamente');
+    setTimeout(() => {
+        navigate('/');
+    }, 1000);
+  }
   const verPerroDetalle =(perro:any) =>{
     dispatch(setPerros({selected:perro.num}));
     navigate('perro');

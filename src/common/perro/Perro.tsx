@@ -4,8 +4,8 @@ import { Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import EditableInput from '../editableInput/EditableInput'
 import { selectMyPerros, setPerros } from '../../app/perroSlice'
-import { setMyPerro } from '../../services/apiCalls'
-import { selectMe } from '../../app/dueñoSlice'
+import { getMe, setMyPerro } from '../../services/apiCalls'
+import { resetDueño, selectMe } from '../../app/dueñoSlice'
 import './Perro.css'
 
 const Perro = (props:any) => {
@@ -60,7 +60,6 @@ const Perro = (props:any) => {
     setPerfilPerro({...perfilPerroInicial})
     setEditFlag(false);
   };
-
   useEffect(()=>{
     if(props.savePerroProps.guardarPerro){
       if(guardable) save();
@@ -69,8 +68,21 @@ const Perro = (props:any) => {
         cancel();
       }
     }
-},[props.savePerroProps.guardarPerro])
-
+  },[props.savePerroProps.guardarPerro])
+  useEffect(()=>{
+    getMe(dueño.token)
+    .then((res:any)=>{
+        if(!(res.status === 200)) logout('expirado');
+    });
+  },[]);
+  const logout = (status:string) => {
+    dispatch(resetDueño());
+    if(status === 'expirado') props.messageProps.setErrMessage('Sesión expirada, debe hacer login de nuevo');
+    if(status === 'correcto') props.messageProps.setSuccessMessage('Sesión cerrada correctamente');
+    setTimeout(() => {
+        navigate('/');
+    }, 1000);
+}
   return (
     <div className='espaciado'>
       <Button variant='primary' className='espaciado' onClick={()=>{
@@ -114,21 +126,19 @@ const Perro = (props:any) => {
           { perros.perros[perros.selected -1].estancias !== undefined ? (
               perros.perros[perros.selected -1].estancias.map((elem:any) =>{
                 return (
-                  <>
-                  <div key={'estancia'+ perros.perros[perros.selected -1].estancias.id} className='estancia espaciado'>
-                    <label htmlFor="id" className='label tabulado'>Id estancia: </label><span>{elem.id}</span><br />
-                    <label htmlFor="inicio" className='label tabulado'>Fecha inicio: </label><span>{elem.inicio}</span><br />
-                    <label htmlFor="fin" className='label tabulado'>Fecha fin: </label><span>{elem.fin}</span><br />
+                  <div key={'estancia'+ elem.id} className='estancia espaciado'>
+                    <label htmlFor="id" className='label tabulado'>Id estancia: </label><span id='id'>{elem.id}</span><br />
+                    <label htmlFor="inicio" className='label tabulado'>Fecha inicio: </label><span id='inicio'>{elem.inicio}</span><br />
+                    <label htmlFor="fin" className='label tabulado'>Fecha fin: </label><span id='fin'>{elem.fin}</span><br />
                     <div className='centrado'>
                       <Button variant='primary' className='espaciado' onClick={()=>{}}>Ver</Button>
                       <Button variant='danger' className='espaciado' onClick={()=>props.messageProps.setErrMessage('Para eliminar debes hablar con tu cuidador antes')}>Quitar</Button>
                     </div>
                   </div>
-                  </>
                 )
               })
             ):(
-              <span>Sin estancias</span>
+              <span key='sin-estancias'>Sin estancias</span>
             )
           }
           </div>

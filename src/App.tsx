@@ -39,15 +39,11 @@ function App(): JSX.Element {
 
   const logout = (status:string) => {
     dispatch(resetDueño());
-    if(status === 'expirado') {
-      setErrMessage('Sesión expirada, debe hacer login de nuevo');
-    }
-    if(status === 'correcto'){
-      setSuccessMessage('Sesión cerrada correctamente');
-      setTimeout(() => {
-          navigate('/');
-      }, 2000);
-    }
+    if(status === 'expirado') messageProps.setErrMessage('Sesión expirada, debe hacer login de nuevo');
+    if(status === 'correcto') messageProps.setSuccessMessage('Sesión cerrada correctamente');
+    setTimeout(() => {
+        navigate('/');
+    }, 1000);
   }
   useEffect(()=>{
     if(!dueño.token){
@@ -67,7 +63,6 @@ function App(): JSX.Element {
   useEffect(()=>{
     if( successMessage !== '')setVisibleSuccess(true);
   },[successMessage]);
-
   return (
     <>
       <Navig savePerfilProps={savePerfilProps} savePerroProps={savePerroProps}></Navig>

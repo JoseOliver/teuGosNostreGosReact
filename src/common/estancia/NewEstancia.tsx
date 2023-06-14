@@ -1,16 +1,17 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectMyPerros } from '../../app/perroSlice';
-import { selectMe } from '../../app/dueñoSlice';
+import { resetDueño, selectMe } from '../../app/dueñoSlice';
 import EditableInput from '../editableInput/EditableInput';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { getCuidadores } from '../../services/apiCalls';
+import { createEstancia, getCuidadores, getMe } from '../../services/apiCalls';
 import './Estancia.css';
 
 const NewEstancia = (props:any) => {
     const navigate = useNavigate();
-    const me= useSelector(selectMe);
+    const dispatch = useDispatch();
+    const dueño= useSelector(selectMe);
     const perros= useSelector(selectMyPerros);
     const [cuidadores, setCuidadores]= useState([{
         id:'-1'
@@ -28,7 +29,7 @@ const NewEstancia = (props:any) => {
         setPerfilEstancia({...perfilEstancia, [nombre]:value});
     };
     useEffect(()=>{
-        getCuidadores(me.token)
+        getCuidadores(dueño.token)
         .then((res:any) => {
             setCuidadores(res.data.data);
         })
@@ -48,8 +49,35 @@ const NewEstancia = (props:any) => {
         // console.log(perfilEstancia)
     },[perfilEstancia]);
 
+    useEffect(()=>{
+        getMe(dueño.token)
+        .then((res:any)=>{
+            if(!(res.status === 200)) logout('expirado');
+        });
+    },[]);
+    const logout = (status:string) => {
+        dispatch(resetDueño());
+        if(status === 'expirado') props.messageProps.setErrMessage('Sesión expirada, debe hacer login de nuevo');
+        if(status === 'correcto') props.messageProps.setSuccessMessage('Sesión cerrada correctamente');
+        setTimeout(() => {
+            navigate('/');
+        }, 1000);
+    }
     const save = () => {
         // todo
+        let body = {
+            "props":{
+                "perro_id":perfilEstancia.numPerro,
+                "cuidador_id":perfilEstancia.cuidadorId,
+                "inicio":perfilEstancia.inicio,
+                "fin":perfilEstancia.fin
+            }
+        };
+        createEstancia(body,dueño.token)
+        .then((res)=>{
+            if(res.status === 200) props.messageProps.setSuccessMessage('Estancia correctamente creada');
+            else props.messageProps.setErrMessage(res.message);
+        });
     }
     return (
         <div className='espaciado'>

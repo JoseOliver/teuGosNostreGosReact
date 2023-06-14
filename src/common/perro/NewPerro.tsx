@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import EditableInput from '../editableInput/EditableInput'
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
-import { newPerro } from '../../services/apiCalls';
-import { selectMe } from '../../app/dueñoSlice';
-import { useSelector } from 'react-redux';
+import { getMe, newPerro } from '../../services/apiCalls';
+import { resetDueño, selectMe } from '../../app/dueñoSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectMyPerros } from '../../app/perroSlice';
 
 const NewPerro = (props:any) => {
@@ -13,6 +13,7 @@ const NewPerro = (props:any) => {
         fecha_nacimiento:'',
         anotaciones:''
     });
+    const dispatch= useDispatch();
     const dueño = useSelector(selectMe);
     const perros = useSelector(selectMyPerros);
     const navigate= useNavigate();
@@ -37,6 +38,20 @@ const NewPerro = (props:any) => {
         ) setGuardable(true);
         else setGuardable(false);
     },[perfilPerro])
+    useEffect(()=>{
+        getMe(dueño.token)
+        .then((res:any)=>{
+            if(!(res.status === 200)) logout('expirado');
+        });
+    },[]);
+    const logout = (status:string) => {
+        dispatch(resetDueño());
+        if(status === 'expirado') props.messageProps.setErrMessage('Sesión expirada, debe hacer login de nuevo');
+        if(status === 'correcto') props.messageProps.setSuccessMessage('Sesión cerrada correctamente');
+        setTimeout(() => {
+            navigate('/');
+        }, 1000);
+    }
     return (
         <>
             <div className='espaciado'>

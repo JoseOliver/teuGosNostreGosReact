@@ -149,3 +149,16 @@ export const getCuidadores = async (token:string) => {
         return error;
     }
 }
+export const createEstancia = async (body:any, token:string) => {
+    try {
+        let config = {
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        };
+        let res:any = await axios.post(`${root}dueno/estancia`, body, config);
+        return res;
+    } catch (error) {
+        return error;
+    }
+}
