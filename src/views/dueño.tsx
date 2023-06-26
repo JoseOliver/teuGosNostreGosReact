@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import { Button, Spinner } from 'react-bootstrap';
+import { Button, ButtonGroup, Spinner } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetDueño, selectMe } from '../app/dueñoSlice';
-import { getMe, getMyEstancias, getMyPerros } from '../services/apiCalls';
+import { getMe, getMyEstancias, getMyPerros, setMyPerro } from '../services/apiCalls';
 import { selectMyPerros, setPerros } from '../app/perroSlice';
 import { useNavigate } from 'react-router-dom';
 import * as dayjs from 'dayjs';
@@ -107,7 +107,9 @@ const Dueño = (props:any) => {
         </div>
         <div className='espaciado'>
           <h3>Sus estancias activas</h3>
-          <Button className='espaciado' onClick={()=>{navigate('/perfil/dueño/nueva-estancia')}}>Nueva estancia</Button>
+          <Button className='espaciado' onClick={()=>{
+            navigate('/perfil/dueño/nueva-estancia');
+            }}>Nueva estancia</Button>
           { perros.perros.length===1 && perros.perros[0].num===-1?
             (
               <div id='estancias' className={estanciasClass}>Estancias...
@@ -123,14 +125,22 @@ const Dueño = (props:any) => {
               perros.perros.map((perro:any)=>{ return(
                 
                   <div className='espaciado' key={'perro'+perro.num}>
-                    <h4>De <span>{perro.nombre}</span></h4>
+                    <h4>De <span>{perro.nombre}</span></h4> 
                     {perro.estancias? 
                       (
                         <div className='grupo repartido espaciado'>
+                        <ButtonGroup className='botonera-grupo' aria-label="Basic example">
+                          <Button active variant="secondary">Todos</Button>
+                          <Button variant="secondary">Activos</Button>
+                          <Button variant="secondary">Antiguos</Button>
+                        </ButtonGroup>
                           {perro.estancias.map((estancia:any)=>{
                             return(
                                 <div key={'estancia'+estancia.id} className='estancia espaciado'>
-                                  <div key={'estanciaBis'+estancia.id} onClick={()=>{navigate('/perfil/dueño/estancia')}}>
+                                  <div key={'estanciaBis'+estancia.id} onClick={()=>{
+                                    dispatch(setPerros({selectedEstancia: perro.estancias.indexOf(estancia)}));
+                                    navigate('/perfil/dueño/estancia');
+                                  }}>
                                     <label htmlFor="id" className='label tabulado'>Id estancia: </label><span key='id'>{estancia.id}</span><br />
                                     <label htmlFor="inicio" className='label tabulado'>Fecha inicio: </label><span key='inicio'>{dayjs(estancia.inicio).format('DD-MM-YYYY hh:mm a')}</span><br />
                                     <label htmlFor="fin" className='label tabulado'>Fecha fin: </label><span key='fin'>{dayjs(estancia.fin).format('DD-MM-YYYY hh:mm a')}</span><br />

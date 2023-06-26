@@ -35,6 +35,7 @@ function App(): JSX.Element {
   const [visibleErr,setVisibleErr] = useState(false);
   const savePerfilProps = {editarPerfil, setEditarPerfil, guardarPerfil, setGuardarPerfil};
   const savePerroProps ={editarPerro, setEditarPerro, guardarPerro, setGuardarPerro};
+  const [scrollTop, setScrollTop] = useState(0);
   let now = dayjs();
 
   const logout = (status:string) => {
@@ -45,6 +46,18 @@ function App(): JSX.Element {
         navigate('/');
     }, 1000);
   }
+  const handleScroll = () => {
+    const position = window.scrollY;
+    console.log(position)
+    setScrollTop(position);
+  }
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+        window.removeEventListener('scroll', handleScroll);
+    };
+});
   useEffect(()=>{
     if(!dueño.token){
       dispatch(resetDueño());
@@ -64,7 +77,7 @@ function App(): JSX.Element {
     if( successMessage !== '')setVisibleSuccess(true);
   },[successMessage]);
   return (
-    <>
+    <div>
       <Navig savePerfilProps={savePerfilProps} savePerroProps={savePerroProps}></Navig>
       <Routes>
         <Route element={<Home></Home>} path='/'></Route>
@@ -77,7 +90,11 @@ function App(): JSX.Element {
         <Route element={<Estancia></Estancia>} path='/perfil/dueño/estancia'></Route>
         <Route element={<NewEstancia messageProps={messageProps}></NewEstancia>} path='/perfil/dueño/nueva-estancia'></Route>
       </Routes>
-      <ToastContainer position='bottom-center'>
+      <ToastContainer position='bottom-center' ref={(node:any) => {
+      if (node) {
+        node.style.setProperty("bottom", -scrollTop+'px', "important");
+      }
+    }}>
             <Toast onClose={() => {
                 setVisibleErr(false);
                 setTimeout(()=>setErrMessage(''),500);
@@ -101,7 +118,7 @@ function App(): JSX.Element {
                 <Toast.Body className='exito'>Exito: {successMessage}</Toast.Body>
             </Toast>
         </ToastContainer>
-    </>
+    </div>
   )
 }
 

@@ -1,3 +1,6 @@
+:root {
+    --scrollY: 0px;
+  }
 .clicable {
     cursor: pointer;
 }
@@ -56,6 +59,8 @@ input:valid {
     font-weight:bold;
 }
 .grupo {
+    display: block;
+    text-align:center;
     border:2px solid black;
     border-radius: 5px;
     background-color: aliceblue;
@@ -69,4 +74,18 @@ input:valid {
     border-radius: 5px;
     background-color: azure;
     min-width:192px;
+}
+.botonera-grupo {
+    position: absolute !important;
+    left: calc(100vw - 273px);
+    opacity: 50%;
+    transition: opacity ease-in-out 200ms;
+}
+.botonera-grupo:hover {
+    position: absolute !important;
+    left: calc(100vw - 273px);
+    opacity: 100%;
+}
+.toast-container {
+    position:absolute;
 }

@@ -28,7 +28,7 @@ const Auth = (props:any) => {
     const [emailError, setEmailError] = useState('');
     const [passError, setPassError] = useState('');
     //regex
-    const emailRegex = "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$";
+    const emailRegex = '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$';
     //dayjs
     let now = dayjs();
     //REGISTRO
@@ -37,13 +37,16 @@ const Auth = (props:any) => {
     const [Reg_nombre, setReg_Nombre] = useState('');
     const [Reg_apellido, setReg_Apellido] = useState('');
     const [Reg_telefono, setReg_Telefono] = useState('');
+    const [Reg_repass, setReg_Repass] = useState('');
     const Reg_emailInput:any = useRef();
     const Reg_passInput:any = useRef();
     const Reg_nombreInput:any = useRef();
     const Reg_apellidoInput:any = useRef();
     const Reg_telefonoInput:any = useRef();
+    const Reg_repassInput:any = useRef();
     const [Reg_emailError, setReg_EmailError] = useState('');
     const [Reg_passError, setReg_PassError] = useState('');
+    const [Reg_repassError, setReg_RepassError] = useState('');
     const [Reg_nombreError, setReg_NombreError] = useState('');
     const [Reg_apellidoError, setReg_ApellidoError] = useState('');
     const [Reg_telefonoError, setReg_TelefonoError] = useState('');
@@ -68,42 +71,53 @@ const Auth = (props:any) => {
     },[props.page]);
     //FUNCTIONS
     const handleFocus =(me:any)=>{
-        switch(me.target.name){
-            case 'email':
-                setEmailError('');
-                break;
-            case 'pass':
-                setPassError('');
-                break;
-        }
+        // switch(me.target.name){
+        //     case 'email':
+        //         setEmailError('');
+        //         break;
+        //     case 'pass':
+        //         setPassError('');
+        //         break;
+        // }
     }
     const handleBlur =(me:any)=>{
         switch(me.target.name){
             case 'email':
-                if(email!=='' && !emailInput.current.validity.valid)setEmailError('Debes introducir un email correcto');
-                else setEmailError('');
+                if(!emailInput.current.value.match(emailRegex)){
+                    setEmailError('Debes introducir un email correcto');
+                    emailInput.current.classList.add('invalid');
+                }
+                else {
+                    setEmailError('');
+                    emailInput.current.classList.remove('invalid');
+                    // emailInput.current.classList.add('valid');
+                }
                 break;
             case 'pass':
                 if(pass==='')setPassError('El password no puede estar vacio');
                 else setPassError('');
                 break;
         }
-            if(emailInput.current.validity.valid && passInput.current.validity.valid)setCanSubmit(true);
-            else setCanSubmit(false);   
+        if (
+            emailInput.current.value !== '' && emailInput.current.value.match(emailRegex) &&
+            passInput.current.value !== ''
+        ) setCanSubmit(true);
+        else setCanSubmit(false);   
     }
     const handleChange = (me:any)=>{
         switch(me.target.name){
             case 'email':
                 setEmail(me.target.value);
-                if(me.target.value.match(emailRegex) && passInput.current.validity.valid)setCanSubmit(true);
-                else setCanSubmit(false);   
                 break;
             case 'pass':
                 setPass(me.target.value);
-                if(emailInput.current.validity.valid && me.target.value!=='')setCanSubmit(true);
-                else setCanSubmit(false);
                 break;
         }
+        if (
+            emailInput.current.value !== '' && emailInput.current.value.match(emailRegex) &&
+            passInput.current.value !== ''
+        ) setCanSubmit(true);
+        else setCanSubmit(false);
     }
     const handleEnter = (me:any) => {
         if(me.code === 'Enter'){
@@ -144,6 +158,7 @@ const Auth = (props:any) => {
                 break;
             case 'pass':
                 setReg_PassError('');
+                setReg_RepassError('');
                 break;
             case 'nombre':
                 setReg_NombreError('');
@@ -154,6 +169,9 @@ const Auth = (props:any) => {
             case 'telefono':
                 setReg_TelefonoError('');
                 break;
+            case 'repass':
+                setReg_RepassError('');
+                break;
         }
     }
     const Reg_handleBlur =(me:any)=>{
@@ -163,92 +181,113 @@ const Auth = (props:any) => {
                     setReg_EmailError('El email no puede estar vacio');
                     break;
                 }
-                if(Reg_email!=='' && !Reg_emailInput.current.value.match(emailRegex))setReg_EmailError('Debes introducir un email correcto');
-                else setReg_EmailError('');
+                if(Reg_email!=='' && !Reg_emailInput.current.value.match(emailRegex)){
+                    setReg_EmailError('Debes introducir un email correcto');
+                    Reg_emailInput.current.classList.add('invalid');
+                }
+                else {
+                    setReg_EmailError('');
+                    Reg_emailInput.current.classList.remove('invalid');
+                }
                 break;
             case 'pass':
-                if(Reg_pass==='')setReg_PassError('El password no puede estar vacio');
-                else setReg_PassError('');
+                if(Reg_pass===''){
+                    setReg_PassError('El password no puede estar vacio');
+                    Reg_passInput.current.classList.add('invalid');
+                }
+                else {
+                    setReg_PassError('');
+                    Reg_passInput.current.classList.remove('invalid');
+                }
+                if(Reg_repass === '' || Reg_repass !== Reg_pass){
+                    setReg_RepassError('Debe introducir la misma contraseña en ambos casos');
+                    Reg_repassInput.current.classList.add('invalid');
+                }
+                else {
+                    setReg_RepassError('');
+                    Reg_repassInput.current.classList.remove('invalid');
+                }
                 break;
             case 'nombre':
-                if(Reg_nombre==='')setReg_NombreError('El nombre no puede estar vacio');
-                else setReg_NombreError('');
+                if(Reg_nombre===''){
+                    setReg_NombreError('El nombre no puede estar vacio');
+                    Reg_nombreInput.current.classList.add('invalid');
+                }
+                else {
+                    setReg_NombreError('');
+                    Reg_nombreInput.current.classList.remove('invalid');
+                }
                 break;
             case 'apellido':
-                if(Reg_apellido==='')setReg_ApellidoError('El apellido no puede estar vacio');
-                else setReg_ApellidoError('');
+                if(Reg_apellido===''){
+                    setReg_ApellidoError('El apellido no puede estar vacio');
+                    Reg_apellidoInput.current.classList.add('invalid');
+                }
+                else {
+                    setReg_ApellidoError('');
+                    Reg_apellidoInput.current.classList.remove('invalid');
+                }
                 break;
             case 'telefono':
-                if(Reg_telefono==='')setReg_TelefonoError('El telefono no puede estar vacio');
-                else setReg_TelefonoError('');
+                if(Reg_telefono===''){
+                    setReg_TelefonoError('El telefono no puede estar vacio');
+                    Reg_telefonoInput.current.classList.add('invalid');
+                }
+                else {
+                    setReg_TelefonoError('');
+                    Reg_telefonoInput.current.classList.remove('invalid');
+                }
                 break;
+            case 'repass':
+                if(Reg_repass === '' || Reg_repass !== Reg_pass){
+                    setReg_RepassError('Debe introducir la misma contraseña en ambos casos');
+                    Reg_repassInput.current.classList.add('invalid');
+                }
+                else {
+                    setReg_RepassError('');
+                    Reg_repassInput.current.classList.remove('invalid');
+                }
         }
-            if(Reg_emailInput.current.validity.valid &&
-                Reg_passInput.current.validity.valid &&
-                Reg_nombreInput.current.validity.valid &&
-                Reg_apellidoInput.current.validity.valid &&
-                Reg_telefonoInput.current.validity.valid
-            )
-                setReg_CanSubmit(true);
-            else setReg_CanSubmit(false);   
+        if(
+            Reg_emailInput.current.value !== '' && Reg_emailInput.current.value.match(emailRegex) &&
+            Reg_passInput.current.value !== '' &&
+            Reg_nombreInput.current.value !== '' &&
+            Reg_apellidoInput.current.value !== '' &&
+            Reg_telefonoInput.current.value !== '' &&
+            Reg_passInput.current.value === Reg_repassInput.current.value
+        ){ setReg_CanSubmit(true);}
+        else{ setReg_CanSubmit(false);}
     }
     const Reg_handleChange = (me:any)=>{
         switch(me.target.name){
             case 'email':
                 setReg_Email(me.target.value);
-                if(me.target.value.match(emailRegex) && // email condicion
-                    Reg_passInput.current.validity.valid &&
-                    Reg_nombreInput.current.validity.valid &&
-                    Reg_apellidoInput.current.validity.valid &&
-                    Reg_telefonoInput.current.validity.valid
-                )
-                    setReg_CanSubmit(true);
-                else setReg_CanSubmit(false);   
                 break;
             case 'pass':
                 setReg_Pass(me.target.value);
-                if(Reg_emailInput.current.validity.valid &&
-                    me.target.value!=='' && // pass condicion
-                    Reg_nombreInput.current.validity.valid &&
-                    Reg_apellidoInput.current.validity.valid &&
-                    Reg_telefonoInput.current.validity.valid
-                )
-                    setReg_CanSubmit(true);
-                else setReg_CanSubmit(false);
                 break;
             case 'nombre':
                 setReg_Nombre(me.target.value);
-                if(Reg_emailInput.current.validity.valid &&
-                    Reg_passInput.current.validity.valid &&
-                    me.target.value!=='' && // nombre condicion
-                    Reg_apellidoInput.current.validity.valid &&
-                    Reg_telefonoInput.current.validity.valid
-                )
-                    setReg_CanSubmit(true);
-                else setReg_CanSubmit(false);
                 break;
             case 'apellido':
                 setReg_Apellido(me.target.value);
-                if(Reg_emailInput.current.validity.valid &&
-                    Reg_passInput.current.validity.valid &&
-                    Reg_nombreInput.current.validity.valid &&
-                    me.target.value!=='' && // apellido condicion
-                    Reg_telefonoInput.current.validity.valid
-                )
-                    setReg_CanSubmit(true);
-                else setReg_CanSubmit(false);
                 break;
             case 'telefono':
                 setReg_Telefono(me.target.value);
-                if(Reg_emailInput.current.validity.valid &&
-                    Reg_nombreInput.current.validity.valid &&
-                    Reg_apellidoInput.current.validity.valid &&
-                    me.target.value!==''
-                )
-                    setReg_CanSubmit(true);
-                else setReg_CanSubmit(false);
+                break;
+            case 'repass':
+                setReg_Repass(me.target.value);
                 break;
         }
+        if(
+            Reg_emailInput.current.value !== '' && Reg_emailInput.current.value.match(emailRegex) &&
+            Reg_passInput.current.value !== '' &&
+            Reg_nombreInput.current.value !== '' &&
+            Reg_apellidoInput.current.value !== '' &&
+            Reg_telefonoInput.current.value !== '' &&
+            Reg_passInput.current.value === Reg_repassInput.current.value
+        ){ setReg_CanSubmit(true);}
+        else{ setReg_CanSubmit(false);}
     }
     const Reg_handleEnter = (me:any) => {
         if(me.code === 'Enter'){
@@ -365,6 +404,11 @@ const Auth = (props:any) => {
                         <div>
                             <input name='pass' className='espaciado redondeado' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_passInput} required type='password' value={Reg_pass} onChange={Reg_handleChange}/>
                             <span className='error'>{Reg_passError}</span>
+                        </div>
+                        <label htmlFor="repass">Repetir contraseña</label>
+                        <div>
+                            <input name='repass' className='espaciado redondeado' onKeyUp={Reg_handleEnter} onFocus={Reg_handleFocus} onBlur={Reg_handleBlur} ref={Reg_repassInput} required type='password' value={Reg_repass} onChange={Reg_handleChange}/>
+                            <span className='error'>{Reg_repassError}</span>
                         </div>
                         <Button type='submit' disabled={!Reg_canSubmit} className='espaciado' variant='primary' onClick={Reg_submit}>
                             {Reg_errBtnSpinner? (
